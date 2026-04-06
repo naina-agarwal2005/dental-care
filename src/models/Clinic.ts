@@ -4,6 +4,7 @@ const clinicSchema = new Schema(
   {
     name: { type: String, required: true, trim: true },
     contactNumber: { type: String, required: true, trim: true },
+    mapsUrl: { type: String, trim: true },
     location: {
       type: {
         type: String,

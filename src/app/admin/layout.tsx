@@ -1,10 +1,9 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Heart, LogOut, Globe, Lock, ArrowRight, User } from 'lucide-react';
+import { ShieldPlus, LogOut, Globe, Lock, ArrowRight, User, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,37 +16,74 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   
   const [mounted, setMounted] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
     setMounted(true);
-    const authStatus = localStorage.getItem('adminAuth') === 'true';
-    setIsAuth(authStatus);
+    // Verify session on mount
+    verifySession();
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Simple mock authentication
-    if (email === "admin@swiftdental.org" && password === "admin123") {
-      localStorage.setItem('adminAuth', 'true');
-      setIsAuth(true);
-      setError("");
-      router.refresh();
-    } else {
-      setError(language === 'en' ? "Invalid credentials." : "ತಪ್ಪು ವಿವರಗಳು.");
+  const verifySession = async () => {
+    try {
+      const response = await fetch('/api/auth/verify');
+      const data = await response.json();
+      setIsAuth(data.authenticated === true);
+    } catch {
+      setIsAuth(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('adminAuth');
-    setIsAuth(false);
-    window.location.href = '/admin';
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError("");
+
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setIsAuth(true);
+        router.refresh();
+      } else {
+        setError(language === 'en' ? data.error || "Invalid credentials." : "ತಪ್ಪು ವಿವರಗಳು.");
+      }
+    } catch {
+      setError(language === 'en' ? "Connection error. Please try again." : "ಸಂಪರ್ಕ ದೋಷ.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  if (!mounted) {
-    return <div className="min-h-screen bg-[#F8FAFC]" />;
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } finally {
+      setIsAuth(false);
+      window.location.href = '/admin';
+    }
+  };
+
+  if (!mounted || isLoading) {
+    return (
+      <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
   }
 
   if (!isAuth) {
@@ -73,10 +109,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   <Input 
                     id="email" 
                     type="email" 
-                    placeholder="admin@swiftdental.org" 
+                    placeholder="admin@example.com" 
                     className="h-12 bg-slate-50 border-none rounded-xl pl-11 focus-visible:ring-primary/10"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    disabled={isSubmitting}
                     required
                   />
                 </div>
@@ -95,17 +132,26 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     className="h-12 bg-slate-50 border-none rounded-xl pl-11 focus-visible:ring-primary/10"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    disabled={isSubmitting}
                     required
                   />
                 </div>
                 {error && <p className="text-xs text-destructive font-bold mt-2 text-center">{error}</p>}
               </div>
 
-              <Button type="submit" className="w-full h-12 bg-primary hover:bg-primary/90 rounded-xl font-black shadow-lg shadow-primary/20">
-                Enter Dashboard <ArrowRight size={16} className="ml-2" />
+              <Button 
+                type="submit" 
+                className="w-full h-12 bg-primary hover:bg-primary/90 rounded-full font-black shadow-lg shadow-primary/20"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  <>Enter Dashboard <ArrowRight size={16} className="ml-2" /></>
+                )}
               </Button>
               
-              <Link href="/" className="block text-center text-[10px] text-slate-400 hover:text-primary transition-colors font-bold uppercase tracking-widest mt-4">
+              <Link href="/" className="block text-center text-xs text-slate-400 hover:text-primary transition-colors font-bold uppercase tracking-widest mt-4">
                 Back to Website
               </Link>
             </form>
@@ -116,26 +162,29 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
-      <header className="bg-white border-b h-16 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
-              <Heart size={20} fill="currentColor" />
-            </div>
-            <h1 className="text-sm font-bold font-headline text-slate-900">SwiftDental Dashboard</h1>
+    <div className="min-h-screen bg-gradient-to-b from-[#caf0f8]/20 to-white">
+      <header className="bg-white border-b border-[#caf0f8] h-16 sticky top-0 z-50 shadow-sm shadow-[#0077b6]/5">
+        <div className="max-w-[1600px] mx-auto px-4 h-full flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Link href="/admin" className="flex items-center gap-2 shrink-0">
+              <ShieldPlus className="h-7 w-7 text-primary" />
+              <span className="font-headline font-black text-xl tracking-tighter text-primary inline-block">
+                Tooth Aids
+              </span>
+            </Link>
+            <span className="text-sm font-bold text-slate-500 ml-1 sm:ml-2">Dashboard</span>
           </div>
           <div className="flex items-center gap-4">
-            <Link href="/" className="text-xs font-bold text-slate-500 hover:text-primary flex items-center gap-1">
-              <Globe size={14} /> Site
+            <Link href="/" className="text-sm font-bold text-slate-500 hover:text-primary flex items-center gap-1.5">
+              <Globe size={18} /> Site
             </Link>
-            <Button variant="ghost" size="sm" onClick={handleLogout} className="text-slate-500 hover:text-destructive gap-2 h-9 rounded-lg">
-              <LogOut size={16} /> <span className="hidden sm:inline">Logout</span>
+            <Button variant="ghost" onClick={handleLogout} className="text-slate-500 hover:text-destructive gap-2 h-10 px-4 rounded-full font-bold">
+              <LogOut size={18} /> <span className="hidden sm:inline">Logout</span>
             </Button>
           </div>
         </div>
       </header>
-      <main className="max-w-7xl mx-auto py-8 px-4">
+      <main className="max-w-[1600px] w-full mx-auto py-8 px-4">
         {children}
       </main>
     </div>

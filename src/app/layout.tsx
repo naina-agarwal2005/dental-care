@@ -1,41 +1,31 @@
-
-"use client";
-
-import React, { useState, useEffect } from 'react';
+import type { Metadata } from 'next';
+import { Inter, PT_Sans } from 'next/font/google';
 import './globals.css';
-import { LanguageProvider, useLanguage } from '@/context/LanguageContext';
-import Link from 'next/link';
-import { MapPin } from 'lucide-react';
-import { usePathname } from 'next/navigation';
+import Providers from '@/components/Providers';
 
-function BottomNav() {
-  const [mounted, setMounted] = useState(false);
-  const { t } = useLanguage();
-  const pathname = usePathname();
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+  weight: ['400', '600', '700', '900'],
+});
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+const ptSans = PT_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-pt-sans',
+  weight: ['400', '700'],
+});
 
-  if (!mounted) return null;
-
-  const isAdmin = pathname.startsWith('/admin');
-  if (isAdmin) return null;
-
-  return (
-    <div className="md:hidden fixed bottom-4 left-6 right-6 z-[100]">
-      <Link 
-        href="/locate" 
-        className="flex items-center justify-center gap-2 py-2.5 px-6 w-full bg-accent text-white rounded-xl shadow-xl border border-white/20 active:scale-[0.98] transition-all"
-      >
-        <MapPin size={16} fill="currentColor" className="text-white" />
-        <span className="font-headline font-black uppercase tracking-widest text-[10px]">
-          {t.nav.locate}
-        </span>
-      </Link>
-    </div>
-  );
-}
+export const metadata: Metadata = {
+  title: 'Tooth Aids - Emergency Dental Care Guide',
+  description: 'Quick first-aid instructions for dental emergencies. Find nearby emergency dental centers.',
+  keywords: ['dental emergency', 'tooth pain', 'first aid', 'dental care'],
+  icons: {
+    icon: '/icon.svg',
+    apple: '/icon.svg',
+  },
+};
 
 export default function RootLayout({
   children,
@@ -43,17 +33,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
-      </head>
+    <html lang="en" className={`${inter.variable} ${ptSans.variable} scroll-smooth`}>
       <body className="font-body antialiased min-h-screen selection:bg-accent/30 bg-[#F8FAFC]">
-        <LanguageProvider>
+        <Providers>
           {children}
-          <BottomNav />
-        </LanguageProvider>
+        </Providers>
       </body>
     </html>
   );

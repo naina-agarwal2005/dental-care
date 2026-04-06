@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from "@/components/ui/button";
 import { useLanguage } from '@/context/LanguageContext';
-import { AlertCircle, ChevronLeft, MapPin, Play } from 'lucide-react';
+import { AlertCircle, ArrowLeft, MapPin, Play } from 'lucide-react';
 import { TraumaItem } from '@/lib/types';
 import { fetchTraumaById } from '@/lib/api-client';
 
@@ -53,23 +53,30 @@ export default function TraumaDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] pb-40 md:pb-12">
-      <div className="bg-white border-b border-slate-100 py-4 sticky top-0 z-50">
-        <div className="max-w-4xl mx-auto px-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-primary transition-colors">
-            <ChevronLeft size={18} /> {t.emergencyGrid.backBtn}
-          </Link>
+    <div className="min-h-screen bg-[#F8FAFC]">
+      <div className="bg-white/90 backdrop-blur-md border-b border-[#caf0f8] shadow-sm shadow-[#0077b6]/5 sticky top-0 z-50">
+        <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button asChild variant="ghost" size="icon" className="rounded-full hover:bg-slate-100">
+              <Link href="/">
+                <ArrowLeft size={20} />
+              </Link>
+            </Button>
+            <h1 className="text-lg md:text-xl font-black text-slate-900 tracking-tight">
+              {language === 'kn' ? protocol.title.kn : protocol.title.en}
+            </h1>
+          </div>
           
           <div className="flex items-center bg-slate-100 p-1 rounded-full border border-slate-200">
             <button 
               onClick={() => setLanguage('en')}
-              className={`px-3 py-1 rounded-full text-[10px] font-black transition-all ${language === 'en' ? 'bg-white text-primary shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`px-3 py-1 rounded-full text-xs font-black transition-all ${language === 'en' ? 'bg-white text-primary shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
             >
               EN
             </button>
             <button 
               onClick={() => setLanguage('kn')}
-              className={`px-3 py-1 rounded-full text-[10px] font-black transition-all ${language === 'kn' ? 'bg-white text-primary shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`px-3 py-1 rounded-full text-xs font-black transition-all ${language === 'kn' ? 'bg-white text-primary shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
             >
               ಕನ್ನಡ
             </button>
@@ -77,100 +84,133 @@ export default function TraumaDetailPage() {
         </div>
       </div>
 
-      <main className="max-w-4xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-          <div className="md:col-span-7 space-y-8">
-            <div className="space-y-4">
-              <h1 className="text-3xl md:text-5xl font-headline font-black text-slate-900 tracking-tighter">
-                {language === 'kn' ? protocol.title.kn : protocol.title.en}
-              </h1>
-            </div>
+      <main className="mx-auto pb-8 relative flex flex-col min-h-[calc(100vh-80px)]">
 
-            <div className="space-y-4">
-              {embedUrl ? (
-                <div className="relative aspect-video rounded-[2rem] overflow-hidden shadow-2xl bg-slate-900 border-4 border-white">
-                  <iframe
-                    src={embedUrl}
-                    title={language === 'kn' ? protocol.title.kn : protocol.title.en}
-                    className="w-full h-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allowFullScreen
-                  />
-                </div>
-              ) : (
-                <div className="relative aspect-video rounded-[2rem] overflow-hidden shadow-2xl bg-slate-900 group border-4 border-white">
-                  <Image
-                    src={protocol.thumbnail}
-                    alt={language === 'kn' ? protocol.title.kn : protocol.title.en}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500 opacity-80"
-                  />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                    <a href={watchUrl} target="_blank" className="w-16 h-16 rounded-full bg-white/90 hover:bg-primary hover:text-white transition-all transform hover:scale-110 flex items-center justify-center text-primary shadow-xl" rel="noreferrer">
-                      <Play fill="currentColor" size={32} className="ml-1" />
-                    </a>
-                    <span className="text-xs font-bold uppercase tracking-widest text-white/90">Watch on YouTube</span>
+        <div className="w-full max-w-6xl mx-auto flex-1 px-0 md:px-6 py-8 md:py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+            
+            {/* LEFT: STEPS */}
+            <div className="lg:col-span-7 order-2 lg:order-1">
+              <div className="px-4 md:px-0">
+                {/* Section Header */}
+                <div className="flex items-center gap-3 mb-8 pb-4 border-b-2 border-[#caf0f8]">
+                  <div className="w-10 h-10 rounded-full bg-[#caf0f8]/50 flex items-center justify-center shrink-0">
+                    <AlertCircle className="w-6 h-6 text-[#0077b6]" />
                   </div>
+                  <h2 className="text-2xl md:text-3xl font-black text-[#03045e]">
+                    {t.emergencyGrid.urgentActions}
+                  </h2>
                 </div>
-              )}
-            </div>
+                
+                {/* Steps List */}
+                <div className="divide-y divide-[#caf0f8]/30">
+                  {protocol.steps.map((step, idx) => (
+                    <div key={idx} className={`group ${idx === 0 ? 'pb-6' : 'py-6'}`}>
+                      {/* Step Number Label */}
+                      <h3 className="text-lg md:text-xl font-semibold text-[#0077b6] mb-4">
+                        {language === 'kn' ? `ಹಂತ ${step.stepNumber}` : `Step ${step.stepNumber}`}
+                      </h3>
 
-            <div className="bg-white rounded-[2rem] p-5 md:p-8 shadow-sm border border-slate-100">
-              <div className="flex items-center gap-2 md:gap-3 text-destructive mb-6 md:mb-8">
-                <AlertCircle className="w-5 h-5 md:w-6 md:h-6" />
-                <h2 className="text-base md:text-xl font-black uppercase tracking-tight">{t.emergencyGrid.urgentActions}</h2>
-              </div>
-              
-              <div className="space-y-6 md:space-y-8">
-                {protocol.steps.map((step, idx) => (
-                  <div key={idx} className="flex gap-3 md:gap-6 group">
-                    <div className="shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-xl md:rounded-2xl bg-destructive/5 text-destructive flex items-center justify-center font-black text-sm md:text-lg border border-destructive/10 group-hover:bg-destructive group-hover:text-white transition-colors duration-300">
-                      {step.stepNumber}
-                    </div>
-                    <div className="flex-1 space-y-3 pt-0.5 md:pt-1">
+                      {/* Step Image */}
                       {step.imageUrl && (
-                        <div className="relative w-full aspect-[16/10] md:aspect-video rounded-xl md:rounded-2xl overflow-hidden border border-slate-200">
-                          <Image src={step.imageUrl} alt={`Step ${step.stepNumber}`} fill className="object-cover" />
+                        <div className="relative w-full aspect-[16/10] rounded-xl overflow-hidden border border-[#caf0f8]/50 shadow-md bg-white mb-6">
+                          <Image 
+                            src={step.imageUrl} 
+                            alt={`Step ${step.stepNumber}`} 
+                            fill 
+                            className="object-cover"
+                          />
                         </div>
                       )}
-                      <p className="text-slate-700 text-base md:text-lg leading-relaxed font-medium">
+
+                      {/* Step Description */}
+                      <p className="text-base md:text-lg leading-relaxed text-slate-700">
                         {language === 'kn' ? step.text.kn : step.text.en}
                       </p>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="md:col-span-5 space-y-6 hidden md:block">
-            <div className="sticky top-24 space-y-6">
-              <div className="bg-accent rounded-[2rem] p-8 text-white shadow-xl shadow-accent/20">
-                <h3 className="text-2xl font-black mb-4 leading-tight">Professional Assistance</h3>
-                <p className="text-white/80 mb-8 font-medium">
-                  Immediate clinical care is required. Locate the nearest verified center in Patna.
-                </p>
-                <Button asChild size="lg" className="w-full h-14 bg-white text-accent hover:bg-white/90 rounded-2xl font-black text-lg shadow-lg">
-                  <Link href="/locate">
-                    <MapPin size={20} className="mr-2" /> {t.emergencyGrid.findClinicBtn}
-                  </Link>
-                </Button>
-              </div>
-
-              <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 space-y-6 text-center">
-                <div className="flex flex-col items-center gap-2">
-                  <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Patna Ambulance</p>
-                  <p className="text-5xl font-black text-primary tracking-tighter">102</p>
+                  ))}
                 </div>
-                <Button variant="outline" size="lg" className="w-full h-14 rounded-2xl font-bold border-slate-100 hover:bg-slate-50 text-slate-900" asChild>
-                  <a href="tel:102">Call Service Directly</a>
-                </Button>
               </div>
             </div>
+
+            {/* RIGHT: VIDEO */}
+            <div className="lg:col-span-5 order-1 lg:order-2">
+              <div className="lg:sticky lg:top-24 px-4 md:px-0">
+                {/* Section Header */}
+                <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-[#caf0f8]">
+                  <div className="w-10 h-10 rounded-full bg-[#caf0f8]/50 flex items-center justify-center shrink-0">
+                    <Play className="w-5 h-5 text-[#0077b6]" />
+                  </div>
+                  <h2 className="text-2xl md:text-3xl font-black text-[#03045e]">
+                    {language === 'kn' ? 'ವೀಡಿಯೊ ಗೈಡ್' : 'Video Guide'}
+                  </h2>
+                </div>
+
+                {/* Video Embed */}
+                {embedUrl ? (
+                  <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl bg-slate-900 border-2 border-[#caf0f8]/50">
+                    <iframe
+                      src={embedUrl}
+                      title={language === 'kn' ? protocol.title.kn : protocol.title.en}
+                      className="w-full h-full"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      allowFullScreen
+                    />
+                  </div>
+                ) : (
+                  <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl bg-slate-900 group border-2 border-[#caf0f8]/50">
+                    <Image
+                      src={protocol.thumbnail}
+                      alt={language === 'kn' ? protocol.title.kn : protocol.title.en}
+                      fill
+                      className="object-cover opacity-80"
+                    />
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-slate-900/20">
+                      <a 
+                        href={watchUrl} 
+                        target="_blank" 
+                        className="w-20 h-20 rounded-full bg-white hover:bg-[#0077b6] hover:text-white transition-all transform hover:scale-110 flex items-center justify-center text-[#0077b6] shadow-2xl group-hover:shadow-primary/50" 
+                        rel="noreferrer"
+                      >
+                        <Play fill="currentColor" size={36} className="ml-1" />
+                      </a>
+                      <span className="text-sm font-bold uppercase tracking-widest text-white bg-slate-900/50 px-4 py-2 rounded-full">
+                        Watch on YouTube
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
           </div>
         </div>
+
+        {/* Sticky Mobile Locate Button */}
+        <div className="md:hidden sticky bottom-6 z-40 px-4 pb-2 w-full pointer-events-none flex justify-center mt-8">
+          <Link 
+            href="/locate" 
+            className="pointer-events-auto flex items-center justify-center gap-2 py-3.5 px-8 w-full max-w-sm bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-2xl shadow-primary/30 border border-primary/20 active:scale-[0.95] transition-all"
+          >
+            <MapPin size={18} fill="currentColor" className="text-primary-foreground" />
+            <span className="font-headline font-semibold text-sm whitespace-nowrap">
+              {t.nav.locate}
+            </span>
+          </Link>
+        </div>
       </main>
+
+      <footer className="bg-white border-t border-[#caf0f8]/50 py-6">
+        <div className="max-w-3xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="text-xs text-slate-400 font-bold uppercase tracking-widest text-center md:text-left">
+            © {new Date().getFullYear()} Tooth Aids. {t.footer.copyright}
+          </div>
+          <Link href="/admin" className="text-[#0077b6] hover:text-[#03045e] font-black uppercase tracking-widest text-xs transition-colors">
+            {t.nav.admin}
+          </Link>
+        </div>
+      </footer>
     </div>
   );
 }

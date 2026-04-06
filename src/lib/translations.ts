@@ -23,7 +23,7 @@ export const translations = {
       title: "Dental Emergency?",
       subtitle: "Select your symptom for immediate first-aid instructions.",
       viewInstructions: "View Instructions",
-      urgentActions: "Urgent Actions",
+      urgentActions: "Steps to Follow",
       findClinicBtn: "Find Nearest Clinic Now",
       backBtn: "Back to Home"
     },
@@ -38,14 +38,14 @@ export const translations = {
       title: "Visual First-Aid Guide",
       subtitle: "Expert guidance on handling dental emergencies with calm and precision.",
       viewFull: "View Full Library",
-      team: "SwiftDental Medical Team",
+      team: "Tooth Aids Medical Team",
       hotlineTitle: "Emergency Hotline",
       hotlineSub: "If you are experiencing severe facial swelling or difficulty breathing, call emergency services immediately.",
       callBtn: "Call 102 (Ambulance)",
       triageBtn: "Emergency Dental Triage"
     },
     footer: {
-      desc: "SwiftDental is a rapid response platform dedicated to helping patients navigate dental trauma emergencies in Patna, Bihar.",
+      desc: "Tooth Aids is a rapid response platform dedicated to helping patients navigate dental trauma emergencies across India.",
       quickLinks: "Quick Links",
       support: "Support",
       copyright: "For information purposes only. Always consult a professional."
@@ -86,7 +86,7 @@ export const translations = {
       title: "ದಂತ ತುರ್ತು?",
       subtitle: "ತಕ್ಷಣದ ಪ್ರಥಮ ಚಿಕಿತ್ಸೆ ಸೂಚನೆಗಳಿಗಾಗಿ ನಿಮ್ಮ ರೋಗಲಕ್ಷಣವನ್ನು ಆರಿಸಿ.",
       viewInstructions: "ಸೂಚನೆಗಳನ್ನು ನೋಡಿ",
-      urgentActions: "ತುರ್ತು ಕ್ರಮಗಳು",
+      urgentActions: "ಅನುಸರಿಸಬೇಕಾದ ಹಂತಗಳು",
       findClinicBtn: "ಈಗ ಹತ್ತಿರದ ಚಿಕಿತ್ಸಾಲಯವನ್ನು ಹುಡುಕಿ",
       backBtn: "ಮುಖಪುಟಕ್ಕೆ ಹಿಂತಿರುಗಿ"
     },
@@ -101,14 +101,14 @@ export const translations = {
       title: "ದೃಶ್ಯ ಪ್ರಥಮ ಚಿಕಿತ್ಸಾ ಮಾರ್ಗದರ್ಶಿ",
       subtitle: "ದಂತ ತುರ್ತುಸ್ಥಿತಿಗಳನ್ನು ಶಾಂತವಾಗಿ ಮತ್ತು ನಿಖರವಾಗಿ ನಿಭಾಯಿಸುವ ಬಗ್ಗೆ ತಜ್ಞರ ಮಾರ್ಗದರ್ಶನ.",
       viewFull: "ಪೂರ್ಣ ಲೈಬ್ರರಿಯನ್ನು ವೀಕ್ಷಿಸಿ",
-      team: "ಸ್ವಿಫ್ಟ್ ಡೆಂಟಲ್ ವೈದ್ಯಕೀಯ ತಂಡ",
+      team: "ಟೂತ್ ಏಡ್ಸ್ ವೈದ್ಯಕೀಯ ತಂಡ",
       hotlineTitle: "ತುರ್ತು ಸಹಾಯವಾಣಿ",
       hotlineSub: "ನೀವು ತೀವ್ರವಾದ ಮುಖದ ಊತ ಅಥವಾ ಉಸಿರಾಟದ ತೊಂದರೆಯನ್ನು ಅನುಭವಿಸುತ್ತಿದ್ದರೆ, ತಕ್ಷಣ ತುರ್ತು ಸೇವೆಗಳಿಗೆ ಕರೆ ಮಾಡಿ.",
       callBtn: "102 ಕ್ಕ್ಕೆ ಕರೆ ಮಾಡಿ (ಆಂಬ್ಯುಲೆನ್ಸ್)",
       triageBtn: "ತುರ್ತು ದಂತ ಟ್ರಯಾಜ್"
     },
     footer: {
-      desc: "ಸ್ವಿಫ್ಟ್ ಡೆಂಟಲ್ ಬಿಹಾರದ ಪಾಟ್ನಾದಲ್ಲಿ ರೋಗಿಗಳಿಗೆ ದಂತ ಆಘಾತದ ತುರ್ತುಸ್ಥಿತಿಗಳನ್ನು ನ್ಯಾವಿಗೇಟ್ ಮಾಡಲು ಸಹಾಯ ಮಾಡಲು ಮೀಸಲಾದ ಕ್ಷಿಪ್ರ ಪ್ರತಿಕ್ರಿಯೆ ವೇದಿಕೆಯಾಗಿದೆ.",
+      desc: "ಟೂತ್ ಏಡ್ಸ್ ರೋಗಿಗಳಿಗೆ ದಂತ ತುರ್ತುಸ್ಥಿತಿಗಳನ್ನು ನಿಭಾಯಿಸಲು ಸಹಾಯ ಮಾಡಲು ಮೀಸಲಾದ ಕ್ಷಿಪ್ರ ಪ್ರತಿಕ್ರಿಯೆ ವೇದಿಕೆಯಾಗಿದೆ.",
       quickLinks: "ತ್ವರಿತ ಲಿಂಕ್‌ಗಳು",
       support: "ಬೆಂಬಲ",
       copyright: "ಮಾಹಿತಿ ಉದ್ದೇಶಗಳಿಗಾಗಿ ಮಾತ್ರ. ಯಾವಾಗಲೂ ವೃತ್ತಿಪರರನ್ನು ಸಂಪರ್ಕಿಸಿ."

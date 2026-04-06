@@ -7,6 +7,7 @@ type ClinicPayload = {
   contactNumber?: string;
   lat?: number;
   lng?: number;
+  mapsUrl?: string;
 };
 
 function normalizePayload(body: ClinicPayload) {
@@ -15,6 +16,7 @@ function normalizePayload(body: ClinicPayload) {
     contactNumber: (body.contactNumber ?? "").trim(),
     lat: Number(body.lat),
     lng: Number(body.lng),
+    mapsUrl: (body.mapsUrl ?? "").trim(),
   };
 }
 
@@ -33,6 +35,7 @@ function mapClinic(doc: any) {
     contactNumber: doc.contactNumber,
     lat: doc.location?.coordinates?.[1],
     lng: doc.location?.coordinates?.[0],
+    mapsUrl: doc.mapsUrl,
     distanceKm: doc.distanceMeters ? Number((doc.distanceMeters / 1000).toFixed(1)) : undefined,
     createdAt: doc.createdAt,
     updatedAt: doc.updatedAt,
@@ -62,11 +65,25 @@ export async function GET(request: Request) {
         },
       ]);
 
-      return NextResponse.json({ data: clinics.map(mapClinic) });
+      return NextResponse.json(
+        { data: clinics.map(mapClinic) },
+        {
+          headers: {
+            'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=60',
+          },
+        }
+      );
     }
 
     const clinics = await ClinicModel.find().sort({ createdAt: -1 }).lean();
-    return NextResponse.json({ data: clinics.map(mapClinic) });
+    return NextResponse.json(
+      { data: clinics.map(mapClinic) },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+        },
+      }
+    );
   } catch (error) {
     return NextResponse.json({ error: "Failed to load clinics" }, { status: 500 });
   }
@@ -86,6 +103,7 @@ export async function POST(request: Request) {
     const created = await ClinicModel.create({
       name: payload.name,
       contactNumber: payload.contactNumber,
+      mapsUrl: payload.mapsUrl || undefined,
       location: {
         type: "Point",
         coordinates: [payload.lng, payload.lat],

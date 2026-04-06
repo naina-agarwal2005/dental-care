@@ -9,12 +9,12 @@ async function parseResponse<T>(res: Response): Promise<T> {
 }
 
 export async function fetchTraumas(): Promise<TraumaItem[]> {
-  const res = await fetch("/api/traumas", { cache: "no-store" });
+  const res = await fetch("/api/traumas", { next: { revalidate: 60 } });
   return parseResponse<TraumaItem[]>(res);
 }
 
 export async function fetchTraumaById(id: string): Promise<TraumaItem> {
-  const res = await fetch(`/api/traumas/${id}`, { cache: "no-store" });
+  const res = await fetch(`/api/traumas/${id}`, { next: { revalidate: 60 } });
   return parseResponse<TraumaItem>(res);
 }
 
@@ -48,12 +48,14 @@ export async function fetchClinics(lat?: number, lng?: number): Promise<ClinicIt
   const search = typeof lat === "number" && typeof lng === "number"
     ? `?lat=${lat}&lng=${lng}`
     : "";
-  const res = await fetch(`/api/clinics${search}`, { cache: "no-store" });
+  // Use shorter revalidation for proximity searches, longer for default list
+  const revalidate = search ? 30 : 60;
+  const res = await fetch(`/api/clinics${search}`, { next: { revalidate } });
   return parseResponse<ClinicItem[]>(res);
 }
 
 export async function fetchClinicById(id: string): Promise<ClinicItem> {
-  const res = await fetch(`/api/clinics/${id}`, { cache: "no-store" });
+  const res = await fetch(`/api/clinics/${id}`, { next: { revalidate: 60 } });
   return parseResponse<ClinicItem>(res);
 }
 

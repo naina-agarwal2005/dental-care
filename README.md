@@ -1,93 +1,125 @@
+# Tooth Aids | Emergency Dental Care Platform
 
-# SwiftDental | Emergency Dental Care Platform
+Tooth Aids is a high-performance, medically-styled web application designed to bridge the gap between dental trauma and immediate clinical care.
 
-SwiftDental is a high-performance, medically-styled web application designed to bridge the gap between dental trauma and immediate clinical care in the Patna region.
-
-## 🚀 Tech Stack
+## Tech Stack
 
 - **Framework**: Next.js 15 (App Router)
+- **Database**: MongoDB 7
 - **Styling**: Tailwind CSS
 - **UI Components**: Shadcn UI
 - **Icons**: Lucide React
 - **State Management**: React Context (Bilingual Support: English/Kannada)
 
-## 🛠️ Key Features
+## Key Features
 
 ### 1. Public Patient Triage
 - **Emergency Grid**: Interactive symptom cards with immediate first-aid instructions.
-- **Clinic Locator**: Custom map interface for 24/7 dental hospitals in Patna with proximity-based sorting.
+- **Clinic Locator**: Custom map interface for 24/7 dental hospitals with proximity-based sorting.
 - **Bilingual Support**: Real-time toggle between English and Kannada.
 
-### 2. Secure Admin Panel (Login: admin@swiftdental.org / admin123)
-- **Authenticated Access**: Secure gate for hospital staff using email and password.
-- **Protocol Management**: Dashboard to update clinical instructions, bilingual content, and YouTube procedure videos.
+### 2. Secure Admin Panel
+- **Authenticated Access**: Secure login with hashed passwords stored in database.
+- **Protocol Management**: Dashboard to update clinical instructions and bilingual content.
 - **Clinic Directory**: Manage verified clinical locations with precise GPS coordinates.
 
 ---
 
-## 👩‍💻 Getting Started
+## Getting Started
 
-### 1. Install Dependencies
+### 1. Environment Setup
+
+Copy the example environment file and configure your settings:
+
 ```bash
-npm install
+cp .env.example .env
 ```
 
-### 2. Run the Development Server
-```bash
-npm run dev
+Edit `.env` with your configuration:
+```env
+# MongoDB credentials
+MONGO_ROOT_USERNAME=your_username
+MONGO_ROOT_PASSWORD=your_secure_password
+MONGODB_URI=mongodb://your_username:your_secure_password@mongo:27017/dentalcare?authSource=admin
+
+# Optional: Custom ports
+APP_PORT=9002
+MONGO_PORT=27017
 ```
-The website will be available at `http://localhost:9002`.
+
+### 2. Start with Docker Compose
+
+```bash
+docker compose up --build -d
+```
+
+- App: `http://localhost:9002`
+- MongoDB: `localhost:27017`
+
+### 3. Seed Admin Account
+
+Create your admin account (required for first-time setup):
+
+```bash
+docker compose exec app sh -c "ADMIN_EMAIL=admin@yourdomain.com ADMIN_PASSWORD=your_secure_password node scripts/seed-admin.js"
+```
+
+**Important Notes:**
+- Admin password must be at least 8 characters
+- You can only seed once - if an admin exists, you must reset the database first
+- Passwords are securely hashed using bcrypt
+
+### 4. Access the Admin Panel
+
+Navigate to `http://localhost:9002/admin` and login with your seeded credentials.
 
 ---
 
-## 🐳 Docker Setup
+## Docker Commands
 
-### Run in Development Mode (recommended for coding)
+### Development Mode (with hot reload)
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 
-- Next.js dev server with hot reload: `http://localhost:9002`
-- MongoDB runs in Docker (`mongo` service)
-
-To view logs:
+### View Logs
 ```bash
-docker compose -f docker-compose.yml -f docker-compose.dev.yml logs -f app
+docker compose logs -f app
 ```
 
-To stop dev stack:
-```bash
-docker compose -f docker-compose.yml -f docker-compose.dev.yml down
-```
-
-### MongoDB-backed API routes
-- `GET/POST /api/traumas`
-- `GET/PUT/DELETE /api/traumas/:id`
-- `GET/POST /api/clinics`
-- `GET/PUT/DELETE /api/clinics/:id`
-
-`GET /api/clinics?lat=<value>&lng=<value>` returns clinics nearest-to-farthest using geospatial query.
-
-### Run with Docker Compose (App + MongoDB)
-```bash
-docker compose up --build
-```
-
-- App: `http://localhost:9002`
-- MongoDB: `mongodb://root:root@localhost:27017/dentalcare?authSource=admin`
-
-To stop:
+### Stop Services
 ```bash
 docker compose down
 ```
 
-To stop and remove MongoDB volume:
+### Stop and Remove Database Volume
 ```bash
 docker compose down -v
 ```
 
-### Run App Container Only
-```bash
-docker build -t dental-care .
-docker run --rm -p 9002:9002 dental-care
-```
+---
+
+## API Routes
+
+### Traumas (Protocols)
+- `GET/POST /api/traumas`
+- `GET/PUT/DELETE /api/traumas/:id`
+
+### Clinics (Hospitals)
+- `GET/POST /api/clinics`
+- `GET/PUT/DELETE /api/clinics/:id`
+- `GET /api/clinics?lat=<value>&lng=<value>` - Returns clinics sorted by proximity
+
+### Authentication
+- `POST /api/auth/login` - Admin login
+- `POST /api/auth/logout` - Admin logout
+- `GET /api/auth/verify` - Verify session
+
+---
+
+## Security
+
+- Admin passwords are hashed using bcrypt (12 rounds)
+- Session tokens are stored in HTTP-only cookies
+- All credentials should be configured via environment variables
+- Never commit `.env` file to version control

@@ -26,5 +26,6 @@ export type ClinicItem = {
   lat: number;
   lng: number;
   contactNumber: string;
+  mapsUrl?: string;
   distanceKm?: number;
 };

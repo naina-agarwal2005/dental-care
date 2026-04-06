@@ -8,14 +8,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Plus, Trash2, Video, Save } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Video, Save, Loader2 } from 'lucide-react';
 import { fetchTraumaById, updateTrauma } from '@/lib/api-client';
 import { TraumaItem } from '@/lib/types';
+
+function getYouTubeVideoId(url: string) {
+  if (!url) return null;
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);
+  return match ? match[1] : null;
+}
 
 export default function EditTraumaPage() {
   const params = useParams();
   const router = useRouter();
   const [trauma, setTrauma] = useState<TraumaItem | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [titleEn, setTitleEn] = useState('');
   const [titleKn, setTitleKn] = useState('');
   const [videoUrl, setVideoUrl] = useState('');
@@ -35,7 +42,8 @@ export default function EditTraumaPage() {
       setVideoUrl(data.videoUrl);
       setThumbnail(data.thumbnail);
       setSteps(data.steps.map((step) => ({ en: step.text.en, kn: step.text.kn, imageUrl: step.imageUrl || '' })));
-    }).catch(() => setTrauma(null));
+    }).catch(() => setTrauma(null))
+      .finally(() => setIsLoading(false));
   }, [params.id]);
 
   const handleAddStep = () => {
@@ -75,80 +83,88 @@ export default function EditTraumaPage() {
     }
   };
 
-  if (!trauma) return <div>Protocol not found.</div>;
+  if (isLoading) return <div className="w-full p-8 text-center text-[#03045e] font-bold">Loading Protocol...</div>;
+  if (!trauma && !isLoading) return <div className="w-full p-8 text-center text-destructive font-bold">Protocol not found.</div>;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="w-full space-y-8 pb-8">
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-xl">
+        <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-full hover:bg-slate-100">
           <ArrowLeft size={20} />
         </Button>
-        <h1 className="text-2xl font-black text-slate-900">Edit: {trauma.title.en}</h1>
+        <h1 className="text-2xl font-black text-slate-900">Edit Trauma Protocol</h1>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-6">
-          <Card className="border-none shadow-sm rounded-2xl">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="space-y-6">
+          <Card className="shadow-lg shadow-[#0077b6]/10 border border-[#caf0f8]/60 bg-white/80 backdrop-blur-sm rounded-2xl">
             <CardHeader>
               <CardTitle className="text-lg">Protocol Details</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Title (English)</Label>
-                  <Input value={titleEn} onChange={(e) => setTitleEn(e.target.value)} className="rounded-xl" />
+                  <Label className="text-base font-bold text-[#03045e]">Title (English)</Label>
+                  <Input value={titleEn} onChange={(e) => setTitleEn(e.target.value)} className="rounded-full bg-white h-12 px-6 border-[#caf0f8] focus-visible:ring-[#00b4d8]/30 shadow-sm" />
                 </div>
                 <div className="space-y-2">
-                  <Label>Title (Kannada)</Label>
-                  <Input value={titleKn} onChange={(e) => setTitleKn(e.target.value)} placeholder="ಶೀರ್ಷಿಕೆ" className="rounded-xl" />
+                  <Label className="text-base font-bold text-[#03045e]">Title (Kannada)</Label>
+                  <Input value={titleKn} onChange={(e) => setTitleKn(e.target.value)} placeholder="ಶೀರ್ಷಿಕೆ" className="rounded-full bg-white h-12 px-6 border-[#caf0f8] focus-visible:ring-[#00b4d8]/30 shadow-sm" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-none shadow-sm rounded-2xl">
+          <Card className="shadow-lg shadow-[#0077b6]/10 border border-[#caf0f8]/60 bg-white/80 backdrop-blur-sm rounded-2xl">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-lg">First-Aid Steps</CardTitle>
-              <Button size="sm" variant="outline" onClick={handleAddStep} className="rounded-lg">
+                <Button size="sm" variant="outline" onClick={handleAddStep} className="rounded-full h-10 px-6 bg-[#caf0f8]/30 border-[#90e0ef] text-[#0077b6] hover:bg-[#90e0ef]/30 font-bold">
                 <Plus size={14} className="mr-1" /> Add Step
               </Button>
             </CardHeader>
             <CardContent className="space-y-6">
               {steps.map((step, index) => (
-                <div key={index} className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-4 relative">
-                  <div className="absolute -top-3 -left-3 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-black text-xs shadow-md">
-                    {index + 1}
+                <div key={index} className="p-6 bg-[#caf0f8]/10 rounded-[2rem] border border-[#90e0ef]/40 space-y-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-[#0077b6] font-black text-lg">Step {index + 1}</h3>
+                    {steps.length > 1 && (
+                      <button 
+                        onClick={() => handleRemoveStep(index)}
+                        className="text-[#00b4d8] hover:text-destructive transition-colors flex items-center gap-1 text-sm font-bold"
+                      >
+                        <Trash2 size={16} /> <span className="hidden sm:inline">Remove</span>
+                      </button>
+                    )}
                   </div>
-                  <button 
-                    onClick={() => handleRemoveStep(index)}
-                    className="absolute top-2 right-2 text-slate-300 hover:text-destructive transition-colors"
-                  >
-                    <Trash2 size={16} />
-                  </button>
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <Label className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">Instruction (EN)</Label>
+                      <Label className="text-sm uppercase font-bold text-[#03045e] tracking-widest">Instruction (EN)</Label>
                       <Textarea 
                         value={step.en} 
                         onChange={(e) => updateStep(index, 'en', e.target.value)}
-                        className="rounded-xl bg-white"
+                        className="rounded-3xl bg-white min-h-[100px] border-[#caf0f8] focus-visible:ring-[#00b4d8]/30 shadow-sm p-4"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">Instruction (KN)</Label>
+                      <Label className="text-sm uppercase font-bold text-[#03045e] tracking-widest">Instruction (KN)</Label>
                       <Textarea 
                         value={step.kn} 
                         onChange={(e) => updateStep(index, 'kn', e.target.value)}
-                        className="rounded-xl bg-white"
+                        className="rounded-3xl bg-white min-h-[100px] border-[#caf0f8] focus-visible:ring-[#00b4d8]/30 shadow-sm p-4"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">Step Image URL (Optional)</Label>
+                      <Label className="text-sm uppercase font-bold text-[#03045e] tracking-widest">Step Image URL (Optional)</Label>
                       <Input 
                         value={step.imageUrl}
                         onChange={(e) => updateStep(index, 'imageUrl', e.target.value)}
-                        className="rounded-xl bg-white"
+                        className="rounded-full bg-white h-12 px-6 border-[#caf0f8] focus-visible:ring-[#00b4d8]/30 shadow-sm"
                       />
+                      {step.imageUrl && (
+                        <div className="pt-2">
+                          <img src={step.imageUrl} alt={`Step ${index + 1} preview`} className="rounded-3xl w-full max-w-sm aspect-video object-cover shadow-sm border border-[#caf0f8]" />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -158,26 +174,49 @@ export default function EditTraumaPage() {
         </div>
 
         <div className="space-y-6">
-          <Card className="border-none shadow-sm rounded-2xl">
+          <Card className="shadow-lg shadow-[#0077b6]/10 border border-[#caf0f8]/60 bg-white/80 backdrop-blur-sm rounded-2xl">
             <CardHeader>
               <CardTitle className="text-lg">Media & Video</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label className="flex items-center gap-2"><Video size={14} /> YouTube URL</Label>
-                <Input value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="https://youtube.com/..." className="rounded-xl" />
+                <Label className="flex items-center gap-2 text-base font-bold text-[#03045e]"><Video size={18} className="text-[#0077b6]" /> YouTube URL*</Label>
+                <Input value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="https://youtube.com/..." className="rounded-full bg-white h-12 px-6 border-[#caf0f8] focus-visible:ring-[#00b4d8]/30 shadow-sm" required />
+                {videoUrl && !getYouTubeVideoId(videoUrl) && (
+                  <p className="text-sm text-destructive font-semibold px-2 mt-1">Invalid YouTube URL. Unable to generate preview.</p>
+                )}
+                {getYouTubeVideoId(videoUrl) && (
+                  <div className="pt-2">
+                    <iframe
+                      src={`https://www.youtube.com/embed/${getYouTubeVideoId(videoUrl)}`}
+                      className="rounded-3xl w-full aspect-video shadow-sm border border-[#caf0f8]"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+                )}
               </div>
               <div className="space-y-2">
-                <Label>Thumbnail URL</Label>
-                <Input value={thumbnail} onChange={(e) => setThumbnail(e.target.value)} className="rounded-xl" />
+                <Label className="text-base font-bold text-[#03045e]">Thumbnail URL*</Label>
+                <Input value={thumbnail} onChange={(e) => setThumbnail(e.target.value)} className="rounded-full bg-white h-12 px-6 border-[#caf0f8] focus-visible:ring-[#00b4d8]/30 shadow-sm" required />
               </div>
-              <img src={thumbnail} className="rounded-xl w-full aspect-video object-cover" />
+              {thumbnail && (
+                <img src={thumbnail} className="rounded-3xl w-full aspect-video object-cover shadow-sm border border-[#caf0f8]" alt="Thumbnail preview" />
+              )}
             </CardContent>
           </Card>
 
-          {error && <p className="text-sm text-destructive">{error}</p>}
-          <Button onClick={handleUpdate} disabled={isSaving} className="w-full h-12 rounded-xl font-bold shadow-lg flex items-center gap-2">
-            <Save size={18} /> {isSaving ? 'Updating...' : 'Update Protocol'}
+          {error && <p className="text-base text-destructive">{error}</p>}
+          <Button onClick={handleUpdate} disabled={isSaving} className="w-full h-14 rounded-full font-bold shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
+            {isSaving ? (
+              <>
+                <Loader2 size={18} className="animate-spin" /> Updating...
+              </>
+            ) : (
+              <>
+                <Save size={18} /> Update Protocol
+              </>
+            )}
           </Button>
         </div>
       </div>

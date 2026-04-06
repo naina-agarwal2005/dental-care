@@ -6,7 +6,7 @@ services:
     environment:
       NODE_ENV: development
       PORT: 9002
-      MONGODB_URI: mongodb://root:root@mongo:27017/dentalcare?authSource=admin
+      MONGODB_URI: ${MONGODB_URI}
       WATCHPACK_POLLING: "true"
       CHOKIDAR_USEPOLLING: "true"
     volumes:

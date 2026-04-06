@@ -8,6 +8,7 @@ type ClinicPayload = {
   contactNumber?: string;
   lat?: number;
   lng?: number;
+  mapsUrl?: string;
 };
 
 function normalizePayload(body: ClinicPayload) {
@@ -16,6 +17,7 @@ function normalizePayload(body: ClinicPayload) {
     contactNumber: (body.contactNumber ?? "").trim(),
     lat: Number(body.lat),
     lng: Number(body.lng),
+    mapsUrl: (body.mapsUrl ?? "").trim(),
   };
 }
 
@@ -34,6 +36,7 @@ function mapClinic(doc: any) {
     contactNumber: doc.contactNumber,
     lat: doc.location?.coordinates?.[1],
     lng: doc.location?.coordinates?.[0],
+    mapsUrl: doc.mapsUrl,
     createdAt: doc.createdAt,
     updatedAt: doc.updatedAt,
   };
@@ -79,6 +82,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       {
         name: payload.name,
         contactNumber: payload.contactNumber,
+        mapsUrl: payload.mapsUrl || undefined,
         location: {
           type: "Point",
           coordinates: [payload.lng, payload.lat],

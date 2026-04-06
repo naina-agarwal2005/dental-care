@@ -11,8 +11,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['PT Sans', 'sans-serif'],
-        headline: ['Inter', 'sans-serif'],
+        body: ['var(--font-pt-sans)', 'PT Sans', 'sans-serif'],
+        headline: ['var(--font-inter)', 'Inter', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {

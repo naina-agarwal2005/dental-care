@@ -35,6 +35,9 @@ const traumaSchema = new Schema(
   }
 );
 
+// Index for sorting by creation date (most common query)
+traumaSchema.index({ createdAt: -1 });
+
 export type TraumaDocument = InferSchemaType<typeof traumaSchema>;
 
 export const TraumaModel = models.Trauma || model("Trauma", traumaSchema);
