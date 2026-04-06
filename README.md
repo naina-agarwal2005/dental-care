@@ -61,15 +61,56 @@ docker compose up --build -d
 Create your admin account (required for first-time setup):
 
 ```bash
-docker compose exec app sh -c "ADMIN_EMAIL=admin@yourdomain.com ADMIN_PASSWORD=your_secure_password node scripts/seed-admin.js"
+docker compose exec app sh -c "ADMIN_EMAIL=your@email.com ADMIN_PASSWORD=your_secure_password node scripts/seed-admin.js"
+```
+
+**Example:**
+```bash
+docker compose exec app sh -c "ADMIN_EMAIL=admin@toothaids.com ADMIN_PASSWORD=MySecurePass123 node scripts/seed-admin.js"
+```
+
+**Expected output on success:**
+```
+========================================
+  Tooth Aids - Admin Seeding Script
+========================================
+
+Connecting to MongoDB...
+Connected to MongoDB successfully.
+
+Hashing password...
+Creating admin account...
+
+========================================
+  Admin account created successfully!
+========================================
+  Email: admin@toothaids.com
+  Password: [hidden]
+========================================
+```
+
+**Expected output if admin already exists:**
+```
+ERROR: An admin account already exists.
+Existing admin email: admin@toothaids.com
+
+To reset the admin account, you must clear the database first.
+This is a safety measure to prevent accidental overwrites.
 ```
 
 **Important Notes:**
 - Admin password must be at least 8 characters
-- You can only seed once - if an admin exists, you must reset the database first
-- Passwords are securely hashed using bcrypt
+- You can only seed once per database - if an admin exists, you must reset the database first
+- Passwords are securely hashed using bcrypt (12 rounds)
+- To reset: `docker compose down -v && rm -rf db/* && docker compose up --build -d`
 
-### 4. Access the Admin Panel
+### 4. Add Emergency Protocols & Hospitals
+
+After logging into the admin panel, use the dashboard to:
+- **Protocols**: Click "Emergency Protocols" > "Add New" to create dental emergency guides
+- **Hospitals**: Click "Hospital Locations" > "Add New" to register clinic locations
+
+### 5. Access the Admin Panel
 
 Navigate to `http://localhost:9002/admin` and login with your seeded credentials.
 
@@ -92,9 +133,9 @@ docker compose logs -f app
 docker compose down
 ```
 
-### Stop and Remove Database Volume
+### Stop and Remove Database
 ```bash
-docker compose down -v
+docker compose down -v && rm -rf db/*
 ```
 
 ---
@@ -123,3 +164,4 @@ docker compose down -v
 - Session tokens are stored in HTTP-only cookies
 - All credentials should be configured via environment variables
 - Never commit `.env` file to version control
+- Database files stored in `db/` directory (gitignored)
