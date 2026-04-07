@@ -50,6 +50,12 @@ RUN addgroup -S nextjs && adduser -S nextjs -G nextjs
 COPY --from=builder --chown=nextjs:nextjs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nextjs /app/.next/static ./.next/static
 
+# Copy scripts directory so we can run management scripts on production container
+COPY --from=builder --chown=nextjs:nextjs /app/scripts ./scripts
+
+# Copy bcryptjs for the seed-admin script (Next.js bundles it, stripping it from standalone node_modules)
+COPY --from=deps --chown=nextjs:nextjs /app/node_modules/bcryptjs ./node_modules/bcryptjs
+
 # Copy public files for favicon
 COPY --from=builder --chown=nextjs:nextjs /app/src/app/icon.svg ./src/app/icon.svg
 
