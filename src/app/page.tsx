@@ -65,12 +65,12 @@ export default function HomePage() {
   }, [traumas]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-on-background relative">
+    <div className="flex flex-col min-h-screen text-on-background relative overflow-x-hidden" style={{ backgroundColor: 'transparent' }}>
       <FloatingBubbles />
       
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm">
-        <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+        <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto relative z-10">
           <Link href="/" className="text-2xl font-bold text-primary font-headline">
             Tooth Aids
           </Link>
@@ -96,7 +96,7 @@ export default function HomePage() {
       </nav>
 
       {/* Hero Section */}
-      <header className="relative pt-24 pb-16 px-6 overflow-hidden">
+      <header className="relative pt-24 pb-16 px-6 overflow-hidden z-10">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
           <div className="z-10 order-2 lg:order-1">
             <h1 className="text-5xl md:text-7xl font-extrabold text-primary leading-tight tracking-tight mb-6">
@@ -132,7 +132,7 @@ export default function HomePage() {
       </header>
 
       {/* Main Content: Protocol Grids */}
-      <main id="protocols" className="max-w-7xl mx-auto px-6 py-16 flex-1 space-y-20 pb-24">
+      <main id="protocols" className="max-w-7xl mx-auto px-6 py-16 flex-1 space-y-20 pb-24 relative z-10">
         {/* First Aid Protocols Section */}
         <section>
           <div className="mb-12">
@@ -177,7 +177,7 @@ export default function HomePage() {
       </main>
 
       {/* Additional Info Bento Section */}
-      <section className="max-w-7xl mx-auto px-6 py-12">
+      <section className="max-w-7xl mx-auto px-6 py-12 relative z-10">
         <div className="grid md:grid-cols-3 gap-6">
           <div className="md:col-span-2 bg-primary-container text-white p-10 rounded-xl relative overflow-hidden">
             <div className="relative z-10">
@@ -222,7 +222,7 @@ export default function HomePage() {
         </Link>
       </div>
 
-      <div ref={footerRef}>
+      <div ref={footerRef} className="relative z-10">
         <Footer />
       </div>
     </div>

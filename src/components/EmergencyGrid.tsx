@@ -55,8 +55,8 @@ export default function EmergencyGrid({ protocols, loading }: EmergencyGridProps
                   unoptimized={protocol.thumbnail.startsWith('/api/')}
                 />
               </div>
-              <div className="p-5">
-                <h3 className="text-lg md:text-xl font-bold text-on-surface leading-snug line-clamp-2">
+              <div className="p-4 md:p-5">
+                <h3 className="text-sm md:text-xl font-bold text-on-surface leading-tight md:leading-snug">
                   {language === 'kn' ? protocol.title.kn : protocol.title.en}
                 </h3>
               </div>

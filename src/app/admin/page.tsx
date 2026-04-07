@@ -105,7 +105,7 @@ export default function AdminDashboard() {
                   <Link 
                     key={trauma.id} 
                     href={`/admin/traumas/${trauma.id}/edit`}
-                    className="flex items-center justify-between p-4 hover:bg-[#caf0f8]/10 transition-colors"
+                    className="flex items-center justify-between p-4 hover:bg-[#caf0f8]/10 transition-colors min-h-[80px]"
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 shrink-0">
@@ -161,11 +161,11 @@ export default function AdminDashboard() {
                   <Link 
                     key={clinic.id} 
                     href={`/admin/clinics/${clinic.id}/edit`}
-                    className="flex items-center justify-between p-4 hover:bg-[#caf0f8]/10 transition-colors"
+                    className="flex items-center justify-between p-4 hover:bg-[#caf0f8]/10 transition-colors min-h-[80px]"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-[#caf0f8]/30 flex items-center justify-center shrink-0">
-                        <MapPin size={18} className="text-[#0077b6]" />
+                      <div className="w-12 h-12 rounded-xl bg-[#caf0f8]/30 flex items-center justify-center shrink-0">
+                        <MapPin size={20} className="text-[#0077b6]" />
                       </div>
                       <div>
                         <p className="font-bold text-slate-900 text-sm">{clinic.name}</p>

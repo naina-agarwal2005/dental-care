@@ -117,7 +117,7 @@ export default function TraumaDetailPage() {
   const currentStepData = protocol.steps[currentStep];
 
   return (
-    <div className="min-h-screen bg-background flex flex-col relative">
+    <div className="min-h-screen flex flex-col relative overflow-x-hidden" style={{ backgroundColor: 'transparent' }}>
       <FloatingBubbles />
       
       {/* Sticky Header */}
