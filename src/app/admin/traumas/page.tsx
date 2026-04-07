@@ -177,7 +177,7 @@ export default function TraumaManagementPage() {
                 <TableRow key={protocol.id} className="hover:bg-slate-50/50 border-b border-slate-50 transition-colors group align-top">
                   <TableCell className="px-6 md:px-8 py-4 md:py-5">
                     <div className="w-44 h-24 md:w-60 md:h-32 rounded-xl md:rounded-2xl overflow-hidden bg-slate-100 border border-slate-100 shadow-sm relative">
-                      <Image src={protocol.thumbnail} alt={protocol.title.en} fill className="object-cover" sizes="(max-width: 768px) 176px, 240px" />
+                      <Image src={protocol.thumbnail} alt={protocol.title.en} fill className="object-cover" sizes="(max-width: 768px) 176px, 240px" unoptimized={protocol.thumbnail.startsWith('/api/')} />
                     </div>
                   </TableCell>
                   <TableCell>

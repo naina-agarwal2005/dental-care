@@ -119,6 +119,7 @@ export default function TraumaDetailPage() {
                             alt={`Step ${step.stepNumber}`} 
                             fill 
                             className="object-cover"
+                            unoptimized={step.imageUrl.startsWith('/api/')}
                           />
                         </div>
                       )}

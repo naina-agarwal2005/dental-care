@@ -57,6 +57,7 @@ export default function EmergencyGrid({ protocols, loading }: EmergencyGridProps
                     alt={language === 'kn' ? protocol.title.kn : protocol.title.en} 
                     fill 
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    unoptimized={protocol.thumbnail.startsWith('/api/')}
                   />
                 </div>
                 <CardHeader className="p-3 pb-1 md:p-4 md:pb-2">

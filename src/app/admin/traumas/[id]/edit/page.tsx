@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { ArrowLeft, Plus, Trash2, Video, Save, Loader2 } from 'lucide-react';
 import { fetchTraumaById, updateTrauma } from '@/lib/api-client';
 import { TraumaItem } from '@/lib/types';
+import { ImageUpload } from '@/components/ImageUpload';
 
 function getYouTubeVideoId(url: string) {
   if (!url) return null;
@@ -153,19 +154,11 @@ export default function EditTraumaPage() {
                         className="rounded-3xl bg-white min-h-[100px] border-[#caf0f8] focus-visible:ring-[#00b4d8]/30 shadow-sm p-4"
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label className="text-sm uppercase font-bold text-[#03045e] tracking-widest">Step Image URL (Optional)</Label>
-                      <Input 
-                        value={step.imageUrl}
-                        onChange={(e) => updateStep(index, 'imageUrl', e.target.value)}
-                        className="rounded-full bg-white h-12 px-6 border-[#caf0f8] focus-visible:ring-[#00b4d8]/30 shadow-sm"
-                      />
-                      {step.imageUrl && (
-                        <div className="pt-2">
-                          <img src={step.imageUrl} alt={`Step ${index + 1} preview`} className="rounded-3xl w-full max-w-sm aspect-video object-cover shadow-sm border border-[#caf0f8]" />
-                        </div>
-                      )}
-                    </div>
+                    <ImageUpload
+                      label="Step Image (Optional)"
+                      value={step.imageUrl}
+                      onChange={(url) => updateStep(index, 'imageUrl', url)}
+                    />
                   </div>
                 </div>
               ))}
@@ -196,13 +189,11 @@ export default function EditTraumaPage() {
                   </div>
                 )}
               </div>
-              <div className="space-y-2">
-                <Label className="text-base font-bold text-[#03045e]">Thumbnail URL*</Label>
-                <Input value={thumbnail} onChange={(e) => setThumbnail(e.target.value)} className="rounded-full bg-white h-12 px-6 border-[#caf0f8] focus-visible:ring-[#00b4d8]/30 shadow-sm" required />
-              </div>
-              {thumbnail && (
-                <img src={thumbnail} className="rounded-3xl w-full aspect-video object-cover shadow-sm border border-[#caf0f8]" alt="Thumbnail preview" />
-              )}
+              <ImageUpload
+                label="Thumbnail*"
+                value={thumbnail}
+                onChange={setThumbnail}
+              />
             </CardContent>
           </Card>
 

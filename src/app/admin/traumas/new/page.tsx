@@ -7,9 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Plus, Trash2, Video, Image as ImageIcon, Save, Loader2 } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Video, Save, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { createTrauma } from '@/lib/api-client';
+import { ImageUpload } from '@/components/ImageUpload';
 
 function getYouTubeVideoId(url: string) {
   if (!url) return null;
@@ -135,20 +136,11 @@ export default function NewTraumaPage() {
                         />
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      <Label className="text-sm uppercase font-bold text-[#03045e] tracking-widest">Step Image URL (Optional)</Label>
-                      <Input 
-                        placeholder="https://image-link.com" 
-                        value={step.imageUrl}
-                        onChange={(e) => updateStep(index, 'imageUrl', e.target.value)}
-                        className="rounded-full bg-white h-12 px-6 border-[#caf0f8] focus-visible:ring-[#00b4d8]/30 shadow-sm"
-                      />
-                      {step.imageUrl && (
-                        <div className="pt-2">
-                          <img src={step.imageUrl} alt={`Step ${index + 1} preview`} className="rounded-3xl w-full max-w-sm aspect-video object-cover shadow-sm border border-[#caf0f8]" />
-                        </div>
-                      )}
-                    </div>
+                    <ImageUpload
+                      label="Step Image (Optional)"
+                      value={step.imageUrl}
+                      onChange={(url) => updateStep(index, 'imageUrl', url)}
+                    />
                   </div>
                 </div>
               ))}
@@ -179,13 +171,11 @@ export default function NewTraumaPage() {
                   </div>
                 )}
               </div>
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2 text-base font-bold text-[#03045e]"><ImageIcon size={18} className="text-[#0077b6]" /> Thumbnail URL*</Label>
-                <Input value={thumbnail} onChange={(e) => setThumbnail(e.target.value)} placeholder="https://image-link.com" className="rounded-full bg-white h-12 px-6 border-[#caf0f8] focus-visible:ring-[#00b4d8]/30 shadow-sm" required />
-              </div>
-              {thumbnail && (
-                <img src={thumbnail} alt="Thumbnail preview" className="rounded-3xl w-full aspect-video object-cover shadow-sm border border-[#caf0f8]" />
-              )}
+              <ImageUpload
+                label="Thumbnail*"
+                value={thumbnail}
+                onChange={setThumbnail}
+              />
             </CardContent>
           </Card>
 
