@@ -18,7 +18,7 @@ services:
     restart: unless-stopped
 
   mongo:
-    image: mongo:7
+    image: mongo:4.4
     container_name: dental-care-mongo
     ports:
       - "${MONGO_PORT:-27017}:27017"
@@ -29,7 +29,7 @@ services:
     volumes:
       - ./db:/data/db
     healthcheck:
-      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      test: ["CMD", "mongo", "--quiet", "--eval", "db.adminCommand('ping').ok"]
       interval: 10s
       timeout: 5s
       retries: 10
