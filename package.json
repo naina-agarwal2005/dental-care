@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "seed:admin": "node scripts/seed-admin.js"
+    "seed:admin": "node scripts/seed-admin.js",
+    "seed:protocols": "node scripts/seed-protocols.js",
+    "seed:clinics": "node scripts/seed-clinics.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^4.1.3",

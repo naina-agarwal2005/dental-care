@@ -3,6 +3,8 @@ export type LocalizedText = {
   kn: string;
 };
 
+export type ProtocolType = 'first_aid' | 'daily_care';
+
 export type TraumaStep = {
   stepNumber: number;
   text: LocalizedText;
@@ -12,6 +14,7 @@ export type TraumaStep = {
 export type TraumaItem = {
   id: string;
   title: LocalizedText;
+  type: ProtocolType;
   videoUrl: string;
   thumbnail: string;
   numberOfFirstAidSteps: number;

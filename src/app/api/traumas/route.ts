@@ -1,9 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import { TraumaModel } from "@/models/Trauma";
+import { requireAuth } from "@/lib/auth";
+import type { ProtocolType } from "@/lib/types";
 
 type TraumaPayload = {
   title?: { en?: string; kn?: string };
+  type?: ProtocolType;
   videoUrl?: string;
   thumbnail?: string;
   steps?: Array<{ stepNumber?: number; text?: { en?: string; kn?: string }; imageUrl?: string }>;
@@ -24,6 +27,7 @@ function normalizePayload(body: TraumaPayload) {
       en: (body.title?.en ?? "").trim(),
       kn: (body.title?.kn ?? "").trim(),
     },
+    type: body.type || 'first_aid',
     videoUrl: (body.videoUrl ?? "").trim(),
     thumbnail: (body.thumbnail ?? "").trim(),
     numberOfFirstAidSteps: steps.length,
@@ -55,6 +59,7 @@ function mapTrauma(doc: any) {
   return {
     id: doc._id.toString(),
     title: doc.title,
+    type: doc.type || 'first_aid',
     videoUrl: doc.videoUrl,
     thumbnail: doc.thumbnail,
     numberOfFirstAidSteps: doc.numberOfFirstAidSteps,
@@ -85,7 +90,11 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  // Require admin authentication
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   try {
     const body = (await request.json()) as TraumaPayload;
     const payload = normalizePayload(body);

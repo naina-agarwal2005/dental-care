@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Plus, Trash2, Video, Save, Loader2 } from 'lucide-react';
 import { fetchTraumaById, updateTrauma } from '@/lib/api-client';
-import { TraumaItem } from '@/lib/types';
+import { TraumaItem, ProtocolType } from '@/lib/types';
 import { ImageUpload } from '@/components/ImageUpload';
 
 function getYouTubeVideoId(url: string) {
@@ -26,6 +26,7 @@ export default function EditTraumaPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [titleEn, setTitleEn] = useState('');
   const [titleKn, setTitleKn] = useState('');
+  const [protocolType, setProtocolType] = useState<ProtocolType>('first_aid');
   const [videoUrl, setVideoUrl] = useState('');
   const [thumbnail, setThumbnail] = useState('');
   const [error, setError] = useState('');
@@ -40,6 +41,7 @@ export default function EditTraumaPage() {
       setTrauma(data);
       setTitleEn(data.title.en);
       setTitleKn(data.title.kn);
+      setProtocolType(data.type || 'first_aid');
       setVideoUrl(data.videoUrl);
       setThumbnail(data.thumbnail);
       setSteps(data.steps.map((step) => ({ en: step.text.en, kn: step.text.kn, imageUrl: step.imageUrl || '' })));
@@ -68,6 +70,7 @@ export default function EditTraumaPage() {
     try {
       await updateTrauma(trauma.id, {
         title: { en: titleEn, kn: titleKn },
+        type: protocolType,
         videoUrl,
         thumbnail,
         steps: steps.map((step, index) => ({
@@ -103,6 +106,33 @@ export default function EditTraumaPage() {
               <CardTitle className="text-lg">Protocol Details</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label className="text-base font-bold text-[#03045e]">Protocol Type*</Label>
+                <div className="flex gap-4">
+                  <button
+                    type="button"
+                    onClick={() => setProtocolType('first_aid')}
+                    className={`flex-1 h-12 rounded-full font-bold transition-all ${
+                      protocolType === 'first_aid'
+                        ? 'bg-primary text-white shadow-lg'
+                        : 'bg-[#caf0f8]/30 text-[#03045e] border border-[#caf0f8] hover:bg-[#caf0f8]/50'
+                    }`}
+                  >
+                    First Aid
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setProtocolType('daily_care')}
+                    className={`flex-1 h-12 rounded-full font-bold transition-all ${
+                      protocolType === 'daily_care'
+                        ? 'bg-secondary text-white shadow-lg'
+                        : 'bg-[#caf0f8]/30 text-[#03045e] border border-[#caf0f8] hover:bg-[#caf0f8]/50'
+                    }`}
+                  >
+                    Daily Care
+                  </button>
+                </div>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label className="text-base font-bold text-[#03045e]">Title (English)</Label>

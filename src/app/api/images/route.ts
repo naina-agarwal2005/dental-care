@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import { ImageModel } from "@/models/Image";
+import { requireAuth } from "@/lib/auth";
 
 // Maximum file size: 5MB
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -14,25 +15,10 @@ const ALLOWED_TYPES = [
   "image/svg+xml",
 ];
 
-function isAuthenticated(request: NextRequest): boolean {
-  const sessionCookie = request.cookies.get("admin_session");
-  if (!sessionCookie?.value) return false;
-
-  try {
-    const sessionData = JSON.parse(
-      Buffer.from(sessionCookie.value, "base64").toString()
-    );
-    return sessionData.exp > Date.now();
-  } catch {
-    return false;
-  }
-}
-
 export async function POST(request: NextRequest) {
-  // Check authentication
-  if (!isAuthenticated(request)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  // Require admin authentication
+  const authError = requireAuth(request);
+  if (authError) return authError;
 
   try {
     const formData = await request.formData();

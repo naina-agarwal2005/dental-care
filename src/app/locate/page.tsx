@@ -1,90 +1,71 @@
-
 "use client";
 
 import React from 'react';
 import Link from 'next/link';
 import ClinicLocator from '@/components/ClinicLocator';
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Info } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
+import Footer from '@/components/Footer';
+import FloatingBubbles from '@/components/FloatingBubbles';
 
 export default function LocatePage() {
-  const { t, language, setLanguage } = useLanguage();
+  const { language, setLanguage } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
-      {/* Header */}
-      <header className="bg-white/90 backdrop-blur-md border-b border-[#caf0f8] shadow-sm shadow-[#0077b6]/5 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+    <div className="min-h-screen bg-background relative flex flex-col">
+      <FloatingBubbles />
+      
+      {/* Header - Consistent with other pages */}
+      <header className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm">
+        <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
           <div className="flex items-center gap-4">
-            <Button asChild variant="ghost" size="icon" className="rounded-full hover:bg-slate-100">
+            <Button asChild variant="ghost" size="icon" className="rounded-full hover:bg-surface-container-high">
               <Link href="/">
                 <ArrowLeft size={20} />
               </Link>
             </Button>
-            <h1 className="text-lg md:text-xl font-black text-slate-900 tracking-tight">
-              {language === 'kn' ? 'ಆಸ್ಪತ್ರೆಗಳ ಸ್ಥಳಗಳು' : 'Hospital Locations'}
-            </h1>
+            <Link href="/" className="text-2xl font-bold text-primary font-headline">
+              Tooth Aids
+            </Link>
           </div>
           
-          <div className="flex items-center bg-slate-100 p-1 rounded-full border border-slate-200">
-            <button 
-              onClick={() => setLanguage('en')}
-              className={`px-3 py-1 rounded-full text-xs font-black transition-all ${language === 'en' ? 'bg-white text-primary shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
-            >
-              EN
-            </button>
+          {/* Language Switcher - Consistent */}
+          <div className="bg-surface-container-high p-1 rounded-full flex items-center">
             <button 
               onClick={() => setLanguage('kn')}
-              className={`px-3 py-1 rounded-full text-xs font-black transition-all ${language === 'kn' ? 'bg-white text-primary shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${language === 'kn' ? 'bg-surface-container-lowest text-primary shadow-sm' : 'text-on-surface-variant hover:text-primary'}`}
             >
               ಕನ್ನಡ
+            </button>
+            <button 
+              onClick={() => setLanguage('en')}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${language === 'en' ? 'bg-surface-container-lowest text-primary shadow-sm' : 'text-on-surface-variant hover:text-primary'}`}
+            >
+              English
             </button>
           </div>
         </div>
       </header>
 
-      <main className="pb-32">
-        <div className="bg-gradient-to-b from-white to-[#F8FAFC] border-b border-[#caf0f8]/30 py-8 px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-bold text-[#03045e] tracking-tight">
-              {language === 'kn' ? 'ಪರಿಶೀಲಿಸಿದ ತುರ್ತು ಕೇಂದ್ರಗಳು' : 'Verified Emergency Centers'}
-            </h2>
-          </div>
+      <main className="pt-24 pb-16 flex-1">
+        {/* Page Title */}
+        <div className="max-w-5xl mx-auto px-6 mb-8">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-on-background tracking-tight leading-tight">
+            {language === 'kn' ? 'ಹತ್ತಿರದ ದಂತ ಚಿಕಿತ್ಸಾಲಯಗಳು' : 'Nearby Dental Clinics'}
+          </h1>
+          <p className="mt-4 text-on-surface-variant max-w-2xl text-lg">
+            {language === 'kn' 
+              ? 'ನಿಮ್ಮ ಸಮೀಪದಲ್ಲಿ ಲಭ್ಯವಿರುವ ದಂತ ಚಿಕಿತ್ಸಾಲಯಗಳನ್ನು ಪತ್ತೆಹಚ್ಚಿ.'
+              : 'Find dental clinics available near your location.'}
+          </p>
+          <div className="h-1.5 w-24 bg-secondary rounded-full mt-4"></div>
         </div>
 
         <ClinicLocator />
-
-        <div className="max-w-6xl mx-auto px-4 mt-8">
-          <div className="bg-[#caf0f8]/20 border border-[#caf0f8]/60 rounded-3xl p-6 md:p-8 flex gap-4 md:gap-6 items-start shadow-lg shadow-[#0077b6]/5">
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-[#90e0ef]/30 rounded-full flex items-center justify-center text-[#0077b6] shrink-0">
-              <Info size={20} />
-            </div>
-            <div>
-              <h3 className="font-bold text-[#03045e] text-base md:text-lg">
-                {language === 'kn' ? 'ಭೌಗೋಳಿಕ ಟಿಪ್ಪಣಿ' : 'Geospatial Note'}
-              </h3>
-              <p className="text-sm md:text-base text-slate-700 leading-relaxed mt-1.5">
-                {language === 'kn' 
-                  ? 'ಟೂತ್ ಎಯ್ಡ್ಸ್ ಹತ್ತಿರದ ಸೌಲಭ್ಯಗಳನ್ನು ಗುರುತಿಸಲು ಲೈವ್ ನಿರ್ದೇಶಾಂಕಗಳನ್ನು ಬಳಸುತ್ತದೆ. ದೂರವನ್ನು ಪಾಯಿಂಟ್-ಟು-ಪಾಯಿಂಟ್ ಲೆಕ್ಕಹಾಕಲಾಗುತ್ತದೆ.' 
-                  : 'Tooth Aids uses live coordinates to identify the closest facilities. Distances are calculated point-to-point. Traffic conditions may affect travel time.'}
-              </p>
-            </div>
-          </div>
-        </div>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-white border-t border-slate-100 py-6">
-        <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-xs text-slate-400 font-bold uppercase tracking-widest text-center md:text-left">
-            © {new Date().getFullYear()} Tooth Aids. {t.footer.copyright}
-          </div>
-          <Link href="/admin" className="text-primary hover:underline font-black uppercase tracking-widest text-xs">
-            {t.nav.admin}
-          </Link>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

@@ -4,26 +4,26 @@
 
 @layer base {
   :root {
-    --background: 190 30% 98%;
-    --foreground: 239 94% 19%;
+    --background: 204 100% 98%;
+    --foreground: 200 100% 9%;
     --card: 0 0% 100%;
-    --card-foreground: 239 94% 19%;
+    --card-foreground: 200 100% 9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 239 94% 19%;
-    --primary: 201 100% 36%;
+    --popover-foreground: 200 100% 9%;
+    --primary: 216 49% 37%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 190 100% 42%;
+    --secondary: 184 100% 22%;
     --secondary-foreground: 0 0% 100%;
-    --muted: 190 73% 88%;
-    --muted-foreground: 201 100% 36%;
-    --accent: 189 71% 75%;
-    --accent-foreground: 239 94% 19%;
-    --destructive: 350 100% 60%;
+    --muted: 204 100% 95%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 204 100% 90%;
+    --accent-foreground: 200 100% 9%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 190 73% 88%;
-    --input: 190 73% 88%;
-    --ring: 190 100% 42%;
-    --radius: 0.75rem;
+    --border: 220 13% 77%;
+    --input: 220 13% 77%;
+    --ring: 184 100% 22%;
+    --radius: 1rem;
   }
   .dark {
     --background: 222 47% 4%;
@@ -32,7 +32,7 @@
     --card-foreground: 210 40% 98%;
     --popover: 222 47% 6%;
     --popover-foreground: 210 40% 98%;
-    --primary: 210 100% 60%; /* Brighter Medical Blue for dark mode */
+    --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
     --secondary: 222 47% 10%;
     --secondary-foreground: 210 40% 98%;
@@ -44,7 +44,7 @@
     --destructive-foreground: 0 0% 98%;
     --border: 222 47% 15%;
     --input: 222 47% 15%;
-    --ring: 210 100% 60%;
+    --ring: 217 91% 60%;
   }
 }
 
@@ -53,10 +53,12 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-body;
+    @apply bg-background text-on-background font-body antialiased;
+    font-family: 'Be Vietnam Pro', sans-serif;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-headline tracking-tight;
+    font-family: 'Plus Jakarta Sans', sans-serif;
   }
 }
 
@@ -70,10 +72,19 @@
   }
   
   .card-hover {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    @apply transition-all duration-300;
   }
   .card-hover:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
+    @apply -translate-y-2 shadow-xl;
+  }
+
+  .hero-mask {
+    border-bottom-left-radius: 3rem;
+    border-bottom-right-radius: 3rem;
+  }
+
+  /* Material Symbols support */
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   }
 }

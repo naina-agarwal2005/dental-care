@@ -1,5 +1,4 @@
-
-import type {Config} from 'tailwindcss';
+import type { Config } from 'tailwindcss';
 
 export default {
   darkMode: ['class'],
@@ -11,13 +10,70 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['var(--font-pt-sans)', 'PT Sans', 'sans-serif'],
-        headline: ['var(--font-inter)', 'Inter', 'sans-serif'],
-        code: ['monospace'],
+        headline: ['var(--font-jakarta)', 'Plus Jakarta Sans', 'sans-serif'],
+        body: ['var(--font-vietnam)', 'Be Vietnam Pro', 'sans-serif'],
+        label: ['var(--font-jakarta)', 'Plus Jakarta Sans', 'sans-serif'],
       },
       colors: {
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
+        // Material Design 3 Color System
+        'on-background': '#001e2c',
+        'on-surface': '#001e2c',
+        'secondary-fixed-dim': '#5cd7e5',
+        primary: {
+          DEFAULT: '#30568b',
+          foreground: '#ffffff',
+        },
+        'inverse-primary': '#a7c8ff',
+        'primary-fixed-dim': '#a7c8ff',
+        'on-error-container': '#93000a',
+        error: '#ba1a1a',
+        'inverse-on-surface': '#e3f3ff',
+        tertiary: {
+          DEFAULT: '#834600',
+          container: '#a55b0c',
+          foreground: '#ffffff',
+        },
+        'surface-container-low': '#e9f5ff',
+        'on-secondary-fixed-variant': '#004f56',
+        background: '#f5faff',
+        'on-secondary': '#ffffff',
+        secondary: {
+          DEFAULT: '#006971',
+          foreground: '#ffffff',
+          container: '#79f1ff',
+        },
+        'outline-variant': '#c3c6d1',
+        'on-tertiary-fixed': '#2f1500',
+        surface: {
+          DEFAULT: '#f5faff',
+          bright: '#f5faff',
+          dim: '#b4e0fb',
+          tint: '#395f94',
+          variant: '#c3e8ff',
+          container: '#dcf1ff',
+          'container-high': '#d0ecff',
+          'container-highest': '#c3e8ff',
+          'container-low': '#e9f5ff',
+          'container-lowest': '#ffffff',
+        },
+        'on-tertiary': '#ffffff',
+        'on-primary-fixed-variant': '#1e477b',
+        'inverse-surface': '#003549',
+        outline: '#737780',
+        'on-error': '#ffffff',
+        'secondary-fixed': '#88f3ff',
+        'primary-fixed': '#d5e3ff',
+        'primary-container': '#4a6fa5',
+        'tertiary-fixed-dim': '#ffb77d',
+        'tertiary-fixed': '#ffdcc3',
+        'error-container': '#ffdad6',
+        'on-secondary-fixed': '#001f23',
+        'on-surface-variant': '#43474f',
+        'on-primary-container': '#edf1ff',
+        'on-tertiary-fixed-variant': '#6e3900',
+        'on-primary': '#ffffff',
+        'on-tertiary-container': '#ffeee4',
+        // Keep shadcn compatibility
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
@@ -25,14 +81,6 @@ export default {
         popover: {
           DEFAULT: 'hsl(var(--popover))',
           foreground: 'hsl(var(--popover-foreground))',
-        },
-        primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
-        },
-        secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
         },
         muted: {
           DEFAULT: 'hsl(var(--muted))',
@@ -68,26 +116,19 @@ export default {
         },
       },
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        DEFAULT: '1rem',
+        lg: '2rem',
+        xl: '3rem',
+        full: '9999px',
       },
       keyframes: {
         'accordion-down': {
-          from: {
-            height: '0',
-          },
-          to: {
-            height: 'var(--radix-accordion-content-height)',
-          },
+          from: { height: '0' },
+          to: { height: 'var(--radix-accordion-content-height)' },
         },
         'accordion-up': {
-          from: {
-            height: 'var(--radix-accordion-content-height)',
-          },
-          to: {
-            height: '0',
-          },
+          from: { height: 'var(--radix-accordion-content-height)' },
+          to: { height: '0' },
         },
       },
       animation: {

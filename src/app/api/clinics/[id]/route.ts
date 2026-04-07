@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { isValidObjectId } from "mongoose";
 import { connectToDatabase } from "@/lib/db";
 import { ClinicModel } from "@/models/Clinic";
+import { requireAuth } from "@/lib/auth";
 
 type ClinicPayload = {
   name?: string;
@@ -61,7 +62,11 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
   }
 }
 
-export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  // Require admin authentication
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   const { id } = await params;
   if (!isValidObjectId(id)) {
     return NextResponse.json({ error: "Invalid clinic id" }, { status: 400 });
@@ -101,7 +106,11 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   }
 }
 
-export async function DELETE(_: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  // Require admin authentication
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   const { id } = await params;
   if (!isValidObjectId(id)) {
     return NextResponse.json({ error: "Invalid clinic id" }, { status: 400 });

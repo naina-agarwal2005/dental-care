@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import { ClinicModel } from "@/models/Clinic";
+import { requireAuth } from "@/lib/auth";
 
 type ClinicPayload = {
   name?: string;
@@ -89,7 +90,11 @@ export async function GET(request: Request) {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  // Require admin authentication
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   try {
     const body = (await request.json()) as ClinicPayload;
     const payload = normalizePayload(body);

@@ -18,6 +18,12 @@ const traumaSchema = new Schema(
       en: { type: String, required: true, trim: true },
       kn: { type: String, required: true, trim: true },
     },
+    type: { 
+      type: String, 
+      enum: ['first_aid', 'daily_care'], 
+      default: 'first_aid',
+      required: true 
+    },
     videoUrl: { type: String, required: true, trim: true },
     thumbnail: { type: String, required: true, trim: true },
     numberOfFirstAidSteps: { type: Number, required: true, min: 1 },
@@ -37,6 +43,8 @@ const traumaSchema = new Schema(
 
 // Index for sorting by creation date (most common query)
 traumaSchema.index({ createdAt: -1 });
+// Index for filtering by type
+traumaSchema.index({ type: 1, createdAt: -1 });
 
 export type TraumaDocument = InferSchemaType<typeof traumaSchema>;
 

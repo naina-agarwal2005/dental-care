@@ -1,20 +1,20 @@
 import type { Metadata } from 'next';
-import { Inter, PT_Sans } from 'next/font/google';
+import { Plus_Jakarta_Sans, Be_Vietnam_Pro } from 'next/font/google';
 import './globals.css';
 import Providers from '@/components/Providers';
 
-const inter = Inter({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-inter',
-  weight: ['400', '600', '700', '900'],
+  variable: '--font-jakarta',
+  weight: ['400', '600', '700', '800'],
 });
 
-const ptSans = PT_Sans({
+const beVietnamPro = Be_Vietnam_Pro({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-pt-sans',
-  weight: ['400', '700'],
+  variable: '--font-vietnam',
+  weight: ['300', '400', '500', '600'],
 });
 
 export const metadata: Metadata = {
@@ -33,8 +33,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${ptSans.variable} scroll-smooth`}>
-      <body className="font-body antialiased min-h-screen selection:bg-accent/30 bg-[#F8FAFC]">
+    <html lang="en" className={`${plusJakartaSans.variable} ${beVietnamPro.variable} scroll-smooth`}>
+      <body className="min-h-screen selection:bg-secondary-container">
         <Providers>
           {children}
         </Providers>
