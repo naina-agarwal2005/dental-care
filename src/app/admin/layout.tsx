@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { ShieldPlus, LogOut, Globe, Lock, ArrowRight, User, Loader2 } from 'lucide-react';
+import { useRouter, usePathname } from 'next/navigation';
+import { ShieldPlus, LogOut, Globe, Lock, ArrowRight, User, Loader2, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,6 +12,7 @@ import { useLanguage } from '@/context/LanguageContext';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const { language } = useLanguage();
   
   const [mounted, setMounted] = useState(false);
@@ -20,7 +21,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+
+
 
   useEffect(() => {
     setMounted(true);
@@ -86,6 +90,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
+  const isAuthRoute = pathname === '/admin/forgot-password' || pathname === '/admin/reset-password';
+
+  if (isAuthRoute) {
+    return <>{children}</>;
+  }
+
   if (!isAuth) {
     return (
       <main className="min-h-screen bg-[#F8FAFC] flex items-center justify-center p-4">
@@ -120,21 +130,37 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-                  {language === 'en' ? 'Access Password' : 'ಪಾಸ್‌ವರ್ಡ್'}
-                </Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password" className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                    {language === 'en' ? 'Access Password' : 'ಪಾಸ್‌ವರ್ಡ್'}
+                  </Label>
+                  <Link 
+                    href="/admin/forgot-password"
+                    className="text-xs font-bold text-primary hover:underline disabled:opacity-50"
+                  >
+                    Forgot Password?
+                  </Link>
+                </div>
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                   <Input 
                     id="password" 
-                    type="password" 
+                    type={showPassword ? "text" : "password"} 
                     placeholder="••••••••" 
-                    className="h-12 bg-slate-50 border-none rounded-xl pl-11 focus-visible:ring-primary/10"
+                    className="h-12 bg-slate-50 border-none rounded-xl pl-11 pr-11 focus-visible:ring-primary/10"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     disabled={isSubmitting}
                     required
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
                 </div>
                 {error && <p className="text-xs text-destructive font-bold mt-2 text-center">{error}</p>}
               </div>
@@ -159,6 +185,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </Card>
       </main>
     );
+  }
+
+  if (isAuthRoute) {
+    return <>{children}</>;
   }
 
   return (

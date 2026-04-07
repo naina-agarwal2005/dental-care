@@ -3,6 +3,8 @@ import mongoose, { Schema, Document } from "mongoose";
 export interface IAdmin extends Document {
   email: string;
   passwordHash: string;
+  resetToken?: string;
+  resetTokenExpiry?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -19,6 +21,12 @@ const AdminSchema = new Schema<IAdmin>(
     passwordHash: {
       type: String,
       required: true,
+    },
+    resetToken: {
+      type: String,
+    },
+    resetTokenExpiry: {
+      type: Date,
     },
   },
   {
