@@ -29,6 +29,10 @@ COPY scripts ./scripts
 # Build argument for MongoDB URI (required at build time for Next.js)
 ARG MONGODB_URI
 ENV MONGODB_URI=${MONGODB_URI}
+
+ARG NEXT_PUBLIC_APP_URL
+ENV NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 

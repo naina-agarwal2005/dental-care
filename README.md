@@ -49,8 +49,16 @@ MONGO_PORT=27017
 
 ### 2. Start with Docker Compose
 
+**Development Environment:**
+Runs the application in development mode with hot-reloading using `docker-compose.dev.yml`.
 ```bash
-docker compose up --build -d
+docker compose -f docker-compose.dev.yml up -d --build
+```
+
+**Production Environment:**
+Builds the optimized Next.js standalone application ready for production using `docker-compose.yml`.
+```bash
+docker compose -f docker-compose.yml up -d --build
 ```
 
 - App: `http://localhost:9002`

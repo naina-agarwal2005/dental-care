@@ -34,7 +34,4 @@ const AdminSchema = new Schema<IAdmin>(
   }
 );
 
-// Create index on email for faster lookups
-AdminSchema.index({ email: 1 });
-
 export const Admin = mongoose.models.Admin || mongoose.model<IAdmin>("Admin", AdminSchema);
