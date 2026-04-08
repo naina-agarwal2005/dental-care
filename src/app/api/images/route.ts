@@ -1,3 +1,4 @@
+import logger from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import { ImageModel } from "@/models/Image";
@@ -74,7 +75,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    console.error("Image upload error:", error);
+    logger.error("Image upload error:", error);
     return NextResponse.json({ error: "Failed to upload image" }, { status: 500 });
   }
 }

@@ -1,3 +1,4 @@
+import logger from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -26,7 +27,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ authenticated: false }, { status: 401 });
     }
   } catch (error) {
-    console.error("Verify error:", error);
+    logger.error("Verify error:", error);
     return NextResponse.json({ authenticated: false }, { status: 500 });
   }
 }

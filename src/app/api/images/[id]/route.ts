@@ -1,3 +1,4 @@
+import logger from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import { ImageModel } from "@/models/Image";
@@ -42,7 +43,7 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error("Image fetch error:", error);
+    logger.error("Image fetch error:", error);
     return NextResponse.json({ error: "Failed to fetch image" }, { status: 500 });
   }
 }

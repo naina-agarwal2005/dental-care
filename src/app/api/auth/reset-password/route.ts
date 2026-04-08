@@ -1,3 +1,4 @@
+import logger from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { Admin } from "@/models/Admin";
 import { connectToDatabase } from "@/lib/db";
@@ -44,7 +45,7 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (error: any) {
-    console.error("Reset password error:", error);
+    logger.error("Reset password error:", error);
     return NextResponse.json({ error: "Failed to process request" }, { status: 500 });
   }
 }

@@ -1,3 +1,4 @@
+import logger from "@/lib/logger";
 import { NextResponse } from "next/server";
 import { Admin } from "@/models/Admin";
 import { connectToDatabase } from "@/lib/db";
@@ -32,7 +33,7 @@ export async function POST(req: Request) {
 
     // Send email via SMTP
     if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-      console.error("SMTP_USER or SMTP_PASS is missing in environment variables.");
+      logger.error("SMTP_USER or SMTP_PASS is missing in environment variables.");
       return NextResponse.json({ error: "Email service is not configured properly." }, { status: 500 });
     }
 
@@ -65,7 +66,7 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (error: any) {
-    console.error("Forgot password error:", error);
+    logger.error("Forgot password error:", error);
     return NextResponse.json({ error: "Failed to process request" }, { status: 500 });
   }
 }
