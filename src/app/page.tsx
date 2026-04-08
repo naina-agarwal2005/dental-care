@@ -104,7 +104,7 @@ export default function HomePage() {
             </h1>
             <p className="text-xl md:text-2xl text-on-surface-variant mb-8 leading-relaxed max-w-xl">
               {language === 'kn' 
-                ? 'ಹಲ್ಲುಗಳ ಆರೋಗ್ಯ ಮತ್ತು ಪ್ರಥಮ ಚಿಕಿತ್ಸೆ ಬಗ್ಗೆ ತಿಳಿಯಿರಿ. ಮಕ್ಕಳ ದಂತ ರಕ್ಷಣೆಗೆ ಒಂದು ಸರಳ ಮಾರ್ಗದರ್ಶಿ.'
+                ? 'ಹಲ್ಲುಗಳ ಆರೋಗ್ಯ ಮತ್ತು ಪ್ರಥಮ ಚಿಕಿತ್ಸೆ ಬಗ್ಗೆ ತಿಳಿಯಿರಿ. ಇದು ಮಕ್ಕಳ ದಂತ ರಕ್ಷಣೆಗೆ ಒಂದು ಸರಳ ಮಾರ್ಗದರ್ಶಿ.'
                 : 'Learn about dental health and first aid. A simple guide to dental care for children.'}
             </p>
             <div className="flex flex-wrap gap-4">
@@ -141,7 +141,7 @@ export default function HomePage() {
                 <Heart className="text-primary w-6 h-6" />
               </div>
               <h2 className="text-3xl md:text-4xl font-bold text-primary">
-                {language === 'kn' ? 'ಪ್ರಥಮ ಚಿಕಿತ್ಸಾ ಪ್ರೋಟೋಕಾಲ್ಗಳು' : 'First Aid Protocols'}
+                {language === 'kn' ? 'ಪ್ರಥಮ ಚಿಕಿತ್ಸಾ ಕ್ರಮಗಳು' : 'First Aid Protocols'}
               </h2>
             </div>
             <p className="text-on-surface-variant text-lg max-w-2xl">
