@@ -50,7 +50,8 @@ export async function POST(req: Request) {
     // Determine the base URL (for local vs. production)
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:9002";
     const resetUrl = `${baseUrl}/admin/reset-password?token=${resetToken}`;
-
+    logger.info(`Reset URL generated: ${resetUrl}`);
+    logger.info(`Base URL: ${baseUrl}`);
     const mailOptions = {
       from: process.env.SMTP_USER,
       to: admin.email,
