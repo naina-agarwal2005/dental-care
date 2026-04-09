@@ -120,11 +120,11 @@ export default function HomePage() {
           <div className="relative order-1 lg:order-2">
             <div className="relative rounded-lg overflow-hidden shadow-xl aspect-video">
               <Image 
-                src="/assets/hero-dental-emergency.png"
-                alt="Happy children with healthy smiles"
-                fill
-                className="object-cover"
-                priority
+                  src="/assets/hero-dental-emergency.png" 
+                  alt="Happy children" 
+                  fill
+                  unoptimized={true} // This forces Next.js to serve the raw file
+                  className="object-cover" 
               />
             </div>
           </div>
