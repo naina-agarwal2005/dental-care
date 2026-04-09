@@ -10,7 +10,6 @@ import { TraumaItem } from '@/lib/types';
 import { fetchTraumas } from '@/lib/api-client';
 import Footer from '@/components/Footer';
 import FloatingBubbles from '@/components/FloatingBubbles';
-import heroDentalImg from '../../public/assets/hero-dental-emergency.png';
 
 export default function HomePage() {
   const { language, setLanguage } = useLanguage();
@@ -121,11 +120,12 @@ export default function HomePage() {
           <div className="relative order-1 lg:order-2">
             <div className="relative rounded-lg overflow-hidden shadow-xl aspect-video">
               <Image 
-                src={heroDentalImg} 
-                alt="Happy children with dentist" 
+                src="/assets/hero-dental-emergency.png"
+                alt="Happy children with dentist"
                 fill
-                priority           
-                className="object-cover" 
+                priority
+                unoptimized={true}
+                className="object-cover"
               />
             </div>
           </div>
