@@ -123,7 +123,7 @@ export default function HomePage() {
                   src="/assets/hero-dental-emergency.png" 
                   alt="Happy children" 
                   fill
-                  unoptimized={true} // This forces Next.js to serve the raw file
+                  unoptimized={true}
                   className="object-cover" 
               />
             </div>
