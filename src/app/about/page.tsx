@@ -185,18 +185,18 @@ export default function AboutPage() {
           {/* Call to Action */}
           <section className="text-center bg-gradient-to-r from-primary-container/20 to-secondary-container/20 rounded-2xl p-12">
             <h2 className="text-2xl md:text-3xl font-bold text-primary mb-4">
-              {language === 'kn' ? 'ಪ್ರೋಟೋಕಾಲ್‌ಗಳನ್ನು ಅನ್ವೇಷಿಸಿ' : 'Explore Our Protocols'}
+              {language === 'kn' ? 'ಪ್ರಥಮ ಚಿಕಿತ್ಸಾ ಕ್ರಮ‌ಗಳನ್ನು ಅನ್ವೇಷಿಸಿ' : 'Explore Our Protocols'}
             </h2>
             <p className="text-on-surface-variant mb-8 max-w-xl mx-auto">
               {language === 'kn'
-                ? 'ನಮ್ಮ ಪ್ರಥಮ ಚಿಕಿತ್ಸೆ ಮತ್ತು ದೈನಂದಿನ ಆರೈಕೆ ಪ್ರೋಟೋಕಾಲ್‌ಗಳನ್ನು ಅನ್ವೇಷಿಸಿ.'
+                ? 'ನಮ್ಮ ಪ್ರಥಮ ಚಿಕಿತ್ಸೆ ಮತ್ತು ದೈನಂದಿನ ಆರೈಕೆ ಪ್ರಥಮ ಚಿಕಿತ್ಸಾ ಕ್ರಮ‌ಗಳನ್ನು ಅನ್ವೇಷಿಸಿ.'
                 : 'Browse our collection of first aid and daily care protocols to be prepared for any situation.'}
             </p>
             <Link 
               href="/"
               className="inline-flex items-center gap-2 bg-primary text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-primary/90 transition-colors"
             >
-              {language === 'kn' ? 'ಪ್ರೋಟೋಕಾಲ್‌ಗಳನ್ನು ನೋಡಿ' : 'View Protocols'}
+              {language === 'kn' ? 'ಪ್ರಥಮ ಚಿಕಿತ್ಸಾ ಕ್ರಮ‌ಗಳನ್ನು ನೋಡಿ' : 'View Protocols'}
             </Link>
           </section>
         </div>

@@ -113,12 +113,6 @@ export default function ClinicLocator() {
             </Button>
           </div>
           
-          {userLocation && (
-            <p className="text-xs text-secondary bg-secondary/10 px-3 py-1.5 rounded-lg inline-block font-medium">
-              {language === 'kn' ? 'ನಿಮ್ಮ ಸ್ಥಳ:' : 'Your location:'} {userLocation.lat.toFixed(4)}, {userLocation.lng.toFixed(4)}
-            </p>
-          )}
-          
           {locationError && !userLocation && (
             <div className="flex items-center gap-3 bg-surface-container-high border border-outline-variant/30 px-4 py-3 rounded-xl">
               <div className="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center flex-shrink-0">
