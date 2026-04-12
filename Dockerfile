@@ -25,7 +25,7 @@ COPY package.json package-lock.json ./
 COPY next.config.ts tsconfig.json tailwind.config.ts postcss.config.mjs ./
 COPY src ./src
 COPY scripts ./scripts
-
+COPY public ./public
 # Build argument for MongoDB URI (required at build time for Next.js)
 ARG MONGODB_URI
 ENV MONGODB_URI=${MONGODB_URI}
@@ -53,7 +53,7 @@ RUN addgroup -S nextjs && adduser -S nextjs -G nextjs
 # Copy standalone build output (includes required node_modules)
 COPY --from=builder --chown=nextjs:nextjs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nextjs /app/.next/static ./.next/static
-
+COPY --from=builder --chown=nextjs:nextjs /app/public ./public
 # Copy scripts directory so we can run management scripts on production container
 COPY --from=builder --chown=nextjs:nextjs /app/scripts ./scripts
 
