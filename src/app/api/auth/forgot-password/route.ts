@@ -48,7 +48,10 @@ export async function POST(req: Request) {
     });
 
     // Determine the base URL (for local vs. production)
-    const baseUrl = "https://toothaids.com"; // use this for local dev "http://localhost:9002";
+    const protocol = req.headers.get("x-forwarded-proto") || "http";
+    const host = req.headers.get("x-forwarded-host") || req.headers.get("host");
+    const baseUrl = process.env.NODE_ENV === "production" ? "https://toothaids.com" : `${protocol}://${host}`;
+    
     const resetUrl = `${baseUrl}/admin/reset-password?token=${resetToken}`;
     logger.info(`Reset URL generated: ${resetUrl}`);
     logger.info(`Base URL: ${baseUrl}`);
