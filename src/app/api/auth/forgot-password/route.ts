@@ -48,8 +48,8 @@ export async function POST(req: Request) {
     });
 
     // Determine the base URL (for local vs. production)
-    const baseUrl = process.env.BASE_URL || "https://toothaids.com";
-    
+    const baseUrl = "https://toothaids.com";
+    // 123 
     const resetUrl = `${baseUrl}/admin/reset-password?token=${resetToken}`;
     logger.info(`Reset URL generated: ${resetUrl}`);
     logger.info(`Base URL: ${baseUrl}`);
