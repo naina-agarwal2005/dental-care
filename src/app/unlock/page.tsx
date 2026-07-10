@@ -24,7 +24,7 @@ function UnlockPageContent() {
 
   useEffect(() => {
     // Check if passcode is configured
-    fetch('/api/admin/settings')
+    fetch('/api/auth/settings-status')
       .then((res) => res.json())
       .then((data) => {
         if (data && data.passcodeSet !== undefined) {

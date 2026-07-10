@@ -23,6 +23,7 @@ export default function AdminDashboard() {
   const [clinics, setClinics] = useState<ClinicItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [passcodeSet, setPasscodeSet] = useState(false);
+  const [savedPasscode, setSavedPasscode] = useState("");
   const [passcode, setPasscode] = useState("");
   const [updatingPasscode, setUpdatingPasscode] = useState(false);
   const [passcodeStatus, setPasscodeStatus] = useState({ type: "", message: "" });
@@ -32,13 +33,14 @@ export default function AdminDashboard() {
     Promise.all([
       fetchTraumas(), 
       fetchClinics(),
-      fetch('/api/admin/settings').then(res => res.json()).catch(() => ({ passcodeSet: false }))
+      fetch('/api/admin/settings').then(res => res.json()).catch(() => ({ passcodeSet: false, passcode: "" }))
     ])
       .then(([traumasData, clinicsData, settingsData]) => {
         setTraumas(traumasData);
         setClinics(clinicsData);
         if (settingsData && settingsData.passcodeSet !== undefined) {
           setPasscodeSet(settingsData.passcodeSet);
+          setSavedPasscode(settingsData.passcode || "");
         }
       })
       .catch(() => {
@@ -69,10 +71,39 @@ export default function AdminDashboard() {
       const data = await res.json();
       if (res.ok && data.success) {
         setPasscodeSet(data.passcodeSet);
+        setSavedPasscode(passcode);
         setPasscode("");
         setPasscodeStatus({ type: "success", message: "Passcode saved successfully!" });
       } else {
         setPasscodeStatus({ type: "error", message: data.error || "Failed to update passcode" });
+      }
+    } catch {
+      setPasscodeStatus({ type: "error", message: "Connection error" });
+    } finally {
+      setUpdatingPasscode(false);
+    }
+  };
+
+  const handleDeletePasscode = async () => {
+    if (!window.confirm("Are you sure you want to delete the passcode? This will lock the website for all visitors until a new passcode is configured.")) {
+      return;
+    }
+    setUpdatingPasscode(true);
+    setPasscodeStatus({ type: "", message: "" });
+    try {
+      const res = await fetch('/api/admin/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ passcode: "" })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setPasscodeSet(false);
+        setSavedPasscode("");
+        setPasscode("");
+        setPasscodeStatus({ type: "success", message: "Passcode deleted successfully. The website is now locked. Enter a new passcode below to unlock it." });
+      } else {
+        setPasscodeStatus({ type: "error", message: data.error || "Failed to delete passcode" });
       }
     } catch {
       setPasscodeStatus({ type: "error", message: "Connection error" });
@@ -103,32 +134,54 @@ export default function AdminDashboard() {
               </div>
               <p className="text-sm text-slate-500 leading-relaxed">
                 {passcodeSet 
-                  ? "A passcode is currently configured. Visitors must enter this passcode to access the website. Changing it will not affect already logged-in users."
+                  ? "A passcode is currently configured. Visitors must enter this passcode to access the website. You must delete the current passcode before you can set a new one."
                   : "No passcode configured. The website is locked for all visitors with a notice to contact the administrator."}
               </p>
+              {passcodeSet && savedPasscode && (
+                <div className="flex items-center gap-2 mt-2 pt-1">
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Current Passcode:</span>
+                  <span className="text-xs font-bold font-mono text-[#0077b6] bg-[#caf0f8]/30 border border-[#caf0f8]/50 px-2 py-0.5 rounded-md select-all">
+                    {savedPasscode}
+                  </span>
+                </div>
+              )}
             </div>
-            <form onSubmit={handleSavePasscode} className="w-full md:w-auto flex flex-col sm:flex-row gap-3 items-stretch sm:items-center shrink-0">
-              <div className="relative min-w-[200px]">
-                <input 
-                  type={showPasscode ? "text" : "password"} 
-                  placeholder={passcodeSet ? "Enter new passcode" : "Set initial passcode"}
-                  value={passcode}
-                  onChange={(e) => setPasscode(e.target.value)}
-                  className="w-full h-11 px-4 pr-10 border border-[#caf0f8] rounded-xl text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0077b6] text-slate-900 bg-slate-50/50"
-                  disabled={updatingPasscode}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPasscode(!showPasscode)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+            {passcodeSet ? (
+              <div className="w-full md:w-auto flex justify-end shrink-0">
+                <Button 
+                  onClick={handleDeletePasscode} 
+                  disabled={updatingPasscode} 
+                  variant="destructive"
+                  className="h-11 rounded-xl px-6 font-bold"
                 >
-                  {showPasscode ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
+                  {updatingPasscode ? <Loader2 size={16} className="animate-spin mr-2" /> : null}
+                  Delete Passcode
+                </Button>
               </div>
-              <Button type="submit" disabled={updatingPasscode} className="h-11 rounded-xl bg-[#0077b6] hover:bg-[#00b4d8] text-white px-5 font-bold shrink-0">
-                {updatingPasscode ? <Loader2 size={16} className="animate-spin" /> : "Save Passcode"}
-              </Button>
-            </form>
+            ) : (
+              <form onSubmit={handleSavePasscode} className="w-full md:w-auto flex flex-col sm:flex-row gap-3 items-stretch sm:items-center shrink-0">
+                <div className="relative min-w-[200px]">
+                  <input 
+                    type={showPasscode ? "text" : "password"} 
+                    placeholder="Set passcode"
+                    value={passcode}
+                    onChange={(e) => setPasscode(e.target.value)}
+                    className="w-full h-11 px-4 pr-10 border border-[#caf0f8] rounded-xl text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0077b6] text-slate-900 bg-slate-50/50"
+                    disabled={updatingPasscode}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPasscode(!showPasscode)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+                  >
+                    {showPasscode ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+                <Button type="submit" disabled={updatingPasscode} className="h-11 rounded-xl bg-[#0077b6] hover:bg-[#00b4d8] text-white px-5 font-bold shrink-0">
+                  {updatingPasscode ? <Loader2 size={16} className="animate-spin" /> : "Save Passcode"}
+                </Button>
+              </form>
+            )}
           </div>
           {passcodeStatus.message && (
             <p className={`text-xs font-bold mt-3 ${passcodeStatus.type === 'success' ? 'text-green-600' : 'text-destructive'}`}>

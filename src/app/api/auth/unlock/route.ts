@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import { Admin } from "@/models/Admin";
-import bcrypt from "bcryptjs";
 import { signSiteToken } from "@/lib/site-auth";
 import logger from "@/lib/logger";
 
@@ -19,14 +18,14 @@ export async function POST(request: NextRequest) {
     await connectToDatabase();
     const admin = await Admin.findOne().lean();
 
-    if (!admin || !admin.sitePasswordHash) {
+    if (!admin || !admin.sitePassword) {
       return NextResponse.json(
         { error: "No passcode configured. Admin must set the passcode first." },
         { status: 400 }
       );
     }
 
-    const isValid = await bcrypt.compare(passcode, admin.sitePasswordHash);
+    const isValid = passcode === admin.sitePassword;
 
     if (!isValid) {
       return NextResponse.json(
