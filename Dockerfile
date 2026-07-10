@@ -3,7 +3,7 @@
 # ============================================
 # Stage 1: Install dependencies
 # ============================================
-FROM node:20-alpine AS deps
+FROM mirror.gcr.io/library/node:20-alpine AS deps
 WORKDIR /app
 
 # Install dependencies with cache mount for faster rebuilds
@@ -14,7 +14,7 @@ RUN --mount=type=cache,target=/root/.npm \
 # ============================================
 # Stage 2: Build the application
 # ============================================
-FROM node:20-alpine AS builder
+FROM mirror.gcr.io/library/node:20-alpine AS builder
 WORKDIR /app
 
 # Copy dependencies from deps stage
@@ -41,7 +41,7 @@ RUN npm run build
 # ============================================
 # Stage 3: Production runner (minimal)
 # ============================================
-FROM node:20-alpine AS runner
+FROM mirror.gcr.io/library/node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=9002

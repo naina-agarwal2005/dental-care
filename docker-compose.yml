@@ -24,7 +24,7 @@ services:
     restart: unless-stopped
 
   mongo:
-    image: mongo:4.4
+    image: mirror.gcr.io/library/mongo:4.4
     container_name: dental-care-mongo
     ports:
       - "${MONGO_PORT:-27017}:27017"

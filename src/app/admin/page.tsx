@@ -8,7 +8,11 @@ import {
   MapPin,
   Plus,
   ArrowRight,
-  Loader2
+  Loader2,
+  Eye,
+  EyeOff,
+  Lock,
+  Unlock
 } from 'lucide-react';
 import Link from 'next/link';
 import { fetchClinics, fetchTraumas } from '@/lib/api-client';
@@ -18,12 +22,24 @@ export default function AdminDashboard() {
   const [traumas, setTraumas] = useState<TraumaItem[]>([]);
   const [clinics, setClinics] = useState<ClinicItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [passcodeSet, setPasscodeSet] = useState(false);
+  const [passcode, setPasscode] = useState("");
+  const [updatingPasscode, setUpdatingPasscode] = useState(false);
+  const [passcodeStatus, setPasscodeStatus] = useState({ type: "", message: "" });
+  const [showPasscode, setShowPasscode] = useState(false);
 
   useEffect(() => {
-    Promise.all([fetchTraumas(), fetchClinics()])
-      .then(([traumasData, clinicsData]) => {
+    Promise.all([
+      fetchTraumas(), 
+      fetchClinics(),
+      fetch('/api/admin/settings').then(res => res.json()).catch(() => ({ passcodeSet: false }))
+    ])
+      .then(([traumasData, clinicsData, settingsData]) => {
         setTraumas(traumasData);
         setClinics(clinicsData);
+        if (settingsData && settingsData.passcodeSet !== undefined) {
+          setPasscodeSet(settingsData.passcodeSet);
+        }
       })
       .catch(() => {
         setTraumas([]);
@@ -32,6 +48,39 @@ export default function AdminDashboard() {
       .finally(() => setLoading(false));
   }, []);
 
+  const handleSavePasscode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!passcode) {
+      setPasscodeStatus({ type: "error", message: "Passcode cannot be empty" });
+      return;
+    }
+    if (passcode.length < 4) {
+      setPasscodeStatus({ type: "error", message: "Passcode must be at least 4 characters long" });
+      return;
+    }
+    setUpdatingPasscode(true);
+    setPasscodeStatus({ type: "", message: "" });
+    try {
+      const res = await fetch('/api/admin/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ passcode })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setPasscodeSet(data.passcodeSet);
+        setPasscode("");
+        setPasscodeStatus({ type: "success", message: "Passcode saved successfully!" });
+      } else {
+        setPasscodeStatus({ type: "error", message: data.error || "Failed to update passcode" });
+      }
+    } catch {
+      setPasscodeStatus({ type: "error", message: "Connection error" });
+    } finally {
+      setUpdatingPasscode(false);
+    }
+  };
+
   return (
     <div className="space-y-8 max-w-6xl mx-auto py-4">
       {/* Welcome Header */}
@@ -39,6 +88,55 @@ export default function AdminDashboard() {
         <h1 className="text-2xl md:text-3xl font-black text-slate-900">Admin Dashboard</h1>
         <p className="text-slate-500">Manage emergency dental care protocols and hospital locations.</p>
       </div>
+
+      {/* Website Access Control Settings */}
+      <Card className="border border-[#caf0f8]/60 shadow-lg shadow-[#0077b6]/5 bg-white rounded-2xl overflow-hidden">
+        <CardContent className="p-6">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div className="space-y-1.5 max-w-xl">
+              <div className="flex items-center gap-2">
+                <div className={`w-2.5 h-2.5 rounded-full ${passcodeSet ? 'bg-green-500' : 'bg-red-500'}`} />
+                <h2 className="text-lg font-bold text-[#03045e] flex items-center gap-2">
+                  {passcodeSet ? <Unlock size={18} className="text-green-500" /> : <Lock size={18} className="text-red-500" />}
+                  Website Access Passcode
+                </h2>
+              </div>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                {passcodeSet 
+                  ? "A passcode is currently configured. Visitors must enter this passcode to access the website. Changing it will not affect already logged-in users."
+                  : "No passcode configured. The website is locked for all visitors with a notice to contact the administrator."}
+              </p>
+            </div>
+            <form onSubmit={handleSavePasscode} className="w-full md:w-auto flex flex-col sm:flex-row gap-3 items-stretch sm:items-center shrink-0">
+              <div className="relative min-w-[200px]">
+                <input 
+                  type={showPasscode ? "text" : "password"} 
+                  placeholder={passcodeSet ? "Enter new passcode" : "Set initial passcode"}
+                  value={passcode}
+                  onChange={(e) => setPasscode(e.target.value)}
+                  className="w-full h-11 px-4 pr-10 border border-[#caf0f8] rounded-xl text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0077b6] text-slate-900 bg-slate-50/50"
+                  disabled={updatingPasscode}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPasscode(!showPasscode)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+                >
+                  {showPasscode ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+              <Button type="submit" disabled={updatingPasscode} className="h-11 rounded-xl bg-[#0077b6] hover:bg-[#00b4d8] text-white px-5 font-bold shrink-0">
+                {updatingPasscode ? <Loader2 size={16} className="animate-spin" /> : "Save Passcode"}
+              </Button>
+            </form>
+          </div>
+          {passcodeStatus.message && (
+            <p className={`text-xs font-bold mt-3 ${passcodeStatus.type === 'success' ? 'text-green-600' : 'text-destructive'}`}>
+              {passcodeStatus.message}
+            </p>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-4">

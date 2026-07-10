@@ -1,0 +1,2 @@
+# Force LF on commit and auto-convert on checkout
+* text=auto eol=lf
